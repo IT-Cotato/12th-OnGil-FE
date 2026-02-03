@@ -47,25 +47,32 @@ export async function getBodyInfoTermsAction(): Promise<{
 /**
  * [GET] 내 체형 정보 조회
  */
-export async function getMyBodyInfoAction(): Promise<{
-  success: boolean;
-  data?: BodyInfoSchemaType & { hasBodyInfo: boolean };
-  message?: string;
-}> {
+export async function getMyBodyInfoAction(): Promise<
+  | {
+      success: true;
+      data: BodyInfoSchemaType & { hasBodyInfo: true };
+      message?: string;
+    }
+  | {
+      success: true;
+      data?: undefined;
+      hasBodyInfo: false;
+      message?: string;
+    }
+  | {
+      success: false;
+      data?: undefined;
+      message: string;
+    }
+> {
   try {
     const response = await api.get<MyBodyInfoResponse>('/users/me/body-info');
 
     if (!response || !response.hasBodyInfo) {
       return {
         success: true,
-        data: {
-          hasBodyInfo: false,
-          height: 0,
-          weight: 0,
-          usualTopSize: '',
-          usualBottomSize: '',
-          usualShoeSize: '',
-        },
+        data: undefined,
+        hasBodyInfo: false,
       };
     }
 
