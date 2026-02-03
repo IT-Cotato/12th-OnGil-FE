@@ -13,7 +13,7 @@ interface MySizeProps {
 }
 
 // 자세히보기 버튼 눌렀을 때 나오는 내 사이즈 정보 컴포넌트
-export function MySize({ productType }: MySizeProps) {
+export default function MySize({ productType }: MySizeProps) {
   const [userInfo, setUserInfo] = useState<BodyInfoSchemaType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
