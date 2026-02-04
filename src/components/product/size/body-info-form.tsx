@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition, useEffect, useState } from 'react';
+import { useTransition, useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   useForm,
@@ -41,14 +41,11 @@ import {
   getBodyInfoTermsAction, // 약관 조회 액션
   TermsData, // 약관 데이터 타입
 } from '@/app/actions/body-info';
+import { SizeOptionsData } from '@/types/domain/size';
 
 // 사이즈 정보 입력/수정 폼 컴포넌트
 
-interface SizeOptionsState {
-  topSizes: string[];
-  bottomSizes: string[];
-  shoeSizes: string[];
-}
+type SizeOptionsState = SizeOptionsData;
 
 // 스타일 상수 정의
 const STYLES = {
@@ -77,36 +74,38 @@ interface InputFieldProps<T extends FieldValues> {
 }
 
 // input 필드 컴포넌트(키, 몸무게)
-const InputField = <T extends FieldValues>({
+function InputField<T extends FieldValues>({
   label,
   name,
   register,
   unit,
   error,
   placeholder = '0',
-}: InputFieldProps<T>) => (
-  <div className="space-y-2">
-    <label className={STYLES.label}>{label}</label>
-    <div
-      className={cn(
-        STYLES.baseBox,
-        error ? STYLES.errorBorder : STYLES.normalBorder,
-      )}
-    >
-      <input
-        type="number"
-        inputMode="decimal"
-        placeholder={placeholder}
-        {...register(name, { valueAsNumber: true })}
-        className="w-full bg-transparent text-right text-base outline-none placeholder:text-gray-400"
-      />
-      <span className="ml-2 text-base whitespace-nowrap text-gray-700">
-        {unit}
-      </span>
+}: InputFieldProps<T>) {
+  return (
+    <div className="space-y-2">
+      <label className={STYLES.label}>{label}</label>
+      <div
+        className={cn(
+          STYLES.baseBox,
+          error ? STYLES.errorBorder : STYLES.normalBorder,
+        )}
+      >
+        <input
+          type="number"
+          inputMode="decimal"
+          placeholder={placeholder}
+          {...register(name, { valueAsNumber: true })}
+          className="w-full bg-transparent text-right text-base outline-none placeholder:text-gray-400"
+        />
+        <span className="ml-2 text-base whitespace-nowrap text-gray-700">
+          {unit}
+        </span>
+      </div>
+      {error && <p className="text-xs text-red-500">{error.message}</p>}
     </div>
-    {error && <p className="text-xs text-red-500">{error.message}</p>}
-  </div>
-);
+  );
+}
 
 interface SelectFieldProps<T extends FieldValues> {
   label: string;
@@ -118,53 +117,55 @@ interface SelectFieldProps<T extends FieldValues> {
 }
 
 // 선택 필드 컴포넌트(상의, 하의, 신발 사이즈)
-const SelectField = <T extends FieldValues>({
+function SelectField<T extends FieldValues>({
   label,
   name,
   control,
   options,
   error,
   placeholder = '선택해주세요',
-}: SelectFieldProps<T>) => (
-  <div className="space-y-2">
-    <label className={STYLES.label}>{label}</label>
-    <Controller
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <Select onValueChange={field.onChange} value={field.value?.toString()}>
-          <SelectTrigger
-            className={cn(
-              STYLES.baseBox,
-              'justify-between outline-none focus:ring-0',
-              error ? STYLES.errorBorder : STYLES.normalBorder,
-              ICON_STYLE,
-            )}
-          >
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
+}: SelectFieldProps<T>) {
+  return (
+    <div className="space-y-2">
+      <label className={STYLES.label}>{label}</label>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <Select onValueChange={field.onChange} value={field.value?.toString()}>
+            <SelectTrigger
+              className={cn(
+                STYLES.baseBox,
+                'justify-between outline-none focus:ring-0',
+                error ? STYLES.errorBorder : STYLES.normalBorder,
+                ICON_STYLE,
+              )}
+            >
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
 
-          <SelectContent
-            position="popper"
-            className="w-full min-w-(--radix-select-trigger-width)"
-            sideOffset={0}
-          >
-            {options.map((opt) => (
-              <SelectItem
-                key={opt}
-                value={opt}
-                className="cursor-pointer py-3 text-base focus:bg-gray-100"
-              >
-                {opt}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
-    />
-    {error && <p className="text-xs text-red-500">{error.message}</p>}
-  </div>
-);
+            <SelectContent
+              position="popper"
+              className="w-full min-w-(--radix-select-trigger-width)"
+              sideOffset={0}
+            >
+              {options.map((opt) => (
+                <SelectItem
+                  key={opt}
+                  value={opt}
+                  className="cursor-pointer py-3 text-base focus:bg-gray-100"
+                >
+                  {opt}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      />
+      {error && <p className="text-xs text-red-500">{error.message}</p>}
+    </div>
+  );
+}
 
 interface BodyInfoFormProps {
   initialData: UserBodyInfo | null;
@@ -180,6 +181,7 @@ export default function BodyInfoForm({ initialData, onSuccess }: BodyInfoFormPro
   // 옵션 목록 & 로딩 상태
   const [sizeOptions, setSizeOptions] = useState<SizeOptionsState | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [initError, setInitError] = useState<string | null>(null);
 
   // 약관 모달 상태 및 데이터
   const [terms, setTerms] = useState<TermsData | null>(null);
@@ -219,34 +221,42 @@ export default function BodyInfoForm({ initialData, onSuccess }: BodyInfoFormPro
   });
 
   // 데이터 초기화
-  useEffect(() => {
-    const initData = async () => {
-      try {
-        const [optionsResult, myInfoResult] = await Promise.all([
-          getSizeOptionsAction(),
-          getMyBodyInfoAction(),
-        ]);
+  const initData = useCallback(async () => {
+    try {
+      const [optionsResult, myInfoResult] = await Promise.all([
+        getSizeOptionsAction(),
+        initialData ? Promise.resolve({ success: false }) : getMyBodyInfoAction(),
+      ]);
 
-        if (optionsResult.success && optionsResult.data) {
-          setSizeOptions(optionsResult.data);
-        }
-
-        if (
-          myInfoResult.success &&
-          myInfoResult.data &&
-          myInfoResult.data.hasBodyInfo
-        ) {
-          reset(myInfoResult.data);
-        }
-      } catch (e) {
-        console.error('Failed to initialize form', e);
-      } finally {
-        setIsInitializing(false);
+      if (optionsResult.success && optionsResult.data) {
+        setSizeOptions(optionsResult.data);
+        setInitError(null);
+      } else {
+        setInitError(
+          optionsResult.message ?? '사이즈 정보를 불러오지 못했습니다.',
+        );
+        return;
       }
-    };
 
+      if (
+        !initialData &&
+        myInfoResult.success &&
+        myInfoResult.data &&
+        myInfoResult.data.hasBodyInfo
+      ) {
+        reset(myInfoResult.data);
+      }
+    } catch (e) {
+      console.error('Failed to initialize form', e);
+      setInitError('초기화 중 오류가 발생했습니다.');
+    } finally {
+      setIsInitializing(false);
+    }
+  }, [reset, initialData]);
+
+  useEffect(() => {
     initData();
-  }, [reset]);
+  }, [initData]);
 
   const onSubmit = (data: BodyInfoSchemaType) => {
     startTransition(async () => {
@@ -266,12 +276,27 @@ export default function BodyInfoForm({ initialData, onSuccess }: BodyInfoFormPro
     });
   };
 
-  if (isInitializing || !sizeOptions) {
+  if (isInitializing) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
       </div>
     );
+  }
+
+  if (initError) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+        <p className="text-sm text-red-500">{initError}</p>
+        <Button type="button" variant="outline" onClick={initData}>
+          다시 시도
+        </Button>
+      </div>
+    );
+  }
+
+  if (!sizeOptions) {
+    return null;
   }
 
   return (

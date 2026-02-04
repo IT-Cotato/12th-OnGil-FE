@@ -7,7 +7,6 @@ import { Progress } from '@/components/ui/progress';
 import { UserBodyInfo, SizeAnalysisResult } from '@/mocks/size';
 import { SimilarUserTable } from './similar-user-table';
 import { MySize } from './my-size';
-import { BodyInfoModal } from './body-info-modal';
 import Link from 'next/link';
 
 interface SizeGuideSectionProps {
@@ -18,15 +17,12 @@ interface SizeGuideSectionProps {
 
 // 사이즈 가이드 섹션 컴포넌트(사이즈 선택 가이드 그래프, 자세히 보기 눌렀을 때 나오는 표와 내 사이즈 정보)
 
-export function SizeGuideSection({
+export default function SizeGuideSection({
   productType,
   userInfo,
   analysisData,
 }: SizeGuideSectionProps) {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModal = () => setIsModalOpen(false);
-  // userInfo = null; // 테스트용: 유저 정보 없는 상태
 
   // 유저 정보가 없는 경우
   if (!userInfo) {
@@ -49,11 +45,6 @@ export function SizeGuideSection({
         </div>
         {/* 모달 렌더링 */}
 
-        <BodyInfoModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          userInfo={null}
-        />
       </>
     );
   }
@@ -133,11 +124,6 @@ export function SizeGuideSection({
         )}
       </section>
 
-      <BodyInfoModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        userInfo={userInfo}
-      />
     </div>
   );
 }
