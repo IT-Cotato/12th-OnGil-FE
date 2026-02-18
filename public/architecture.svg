@@ -1,0 +1,246 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="880" viewBox="0 0 1200 880" font-family="'Segoe UI', Arial, sans-serif">
+  <!-- ========== BACKGROUND ========== -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EEF2FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0FDF4;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="4" flood-color="#00000022"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4299E1"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#718096"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#48BB78"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ED8936"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9F7AEA"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="880" fill="url(#bgGrad)" rx="0"/>
+
+  <!-- ========== TITLE ========== -->
+  <rect x="0" y="0" width="1200" height="60" fill="#1A202C" rx="0"/>
+  <text x="600" y="22" text-anchor="middle" font-size="11" fill="#A0AEC0" font-weight="500" letter-spacing="2">FRONTEND ARCHITECTURE</text>
+  <text x="600" y="46" text-anchor="middle" font-size="22" fill="#FFFFFF" font-weight="700" letter-spacing="1">12th-OnGil (온길) — Next.js 16 App Router</text>
+
+  <!-- ========== LAYER 1: USER ========== -->
+  <rect x="40" y="82" width="1120" height="100" fill="#EBF8FF" stroke="#4299E1" stroke-width="2" rx="12" filter="url(#shadow)"/>
+  <rect x="40" y="82" width="200" height="100" fill="#4299E1" rx="12"/>
+  <rect x="220" y="82" width="20" height="100" fill="#4299E1"/>
+  <text x="140" y="122" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="600" letter-spacing="1">사용자 레이어</text>
+  <text x="140" y="140" text-anchor="middle" font-size="10" fill="#BEE3F8">USER LAYER</text>
+  <!-- Browser box -->
+  <rect x="260" y="96" width="240" height="72" fill="#FFFFFF" stroke="#4299E1" stroke-width="1.5" rx="8"/>
+  <text x="290" y="118" font-size="22">🌐</text>
+  <text x="320" y="118" font-size="13" fill="#2D3748" font-weight="600">Web Browser</text>
+  <text x="320" y="136" font-size="11" fill="#718096">HTTP / HTTPS Request</text>
+  <text x="320" y="152" font-size="11" fill="#718096">React Hydration</text>
+  <!-- PWA box -->
+  <rect x="530" y="96" width="240" height="72" fill="#FFFFFF" stroke="#4299E1" stroke-width="1.5" rx="8"/>
+  <text x="560" y="118" font-size="22">📱</text>
+  <text x="592" y="118" font-size="13" fill="#2D3748" font-weight="600">PWA (Progressive Web App)</text>
+  <text x="592" y="136" font-size="11" fill="#718096">Service Worker (sw.js)</text>
+  <text x="592" y="152" font-size="11" fill="#718096">Web Push Notification</text>
+  <!-- i18n box -->
+  <rect x="800" y="96" width="200" height="72" fill="#FFFFFF" stroke="#4299E1" stroke-width="1.5" rx="8"/>
+  <text x="828" y="118" font-size="22">🌍</text>
+  <text x="860" y="118" font-size="13" fill="#2D3748" font-weight="600">i18n</text>
+  <text x="860" y="136" font-size="11" fill="#718096">다국어 지원</text>
+  <text x="860" y="152" font-size="11" fill="#718096">src/locales</text>
+
+  <!-- Arrow: User → Next.js -->
+  <line x1="600" y1="182" x2="600" y2="205" stroke="#4299E1" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowBlue)"/>
+
+  <!-- ========== LAYER 2: NEXT.JS APP ========== -->
+  <rect x="40" y="210" width="1120" height="340" fill="#F0FFF4" stroke="#48BB78" stroke-width="2" rx="12" filter="url(#shadow)"/>
+  <rect x="40" y="210" width="200" height="340" fill="#48BB78" rx="12"/>
+  <rect x="220" y="210" width="20" height="340" fill="#48BB78"/>
+  <text x="140" y="366" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="600" letter-spacing="1" transform="rotate(-90, 140, 366)">NEXT.JS 16 (APP ROUTER)</text>
+
+  <!-- === Row 1 in Next.js === -->
+  <!-- Middleware box -->
+  <rect x="255" y="224" width="210" height="100" fill="#FFFFFF" stroke="#ECC94B" stroke-width="2" rx="8"/>
+  <rect x="255" y="224" width="210" height="28" fill="#ECC94B" rx="8"/>
+  <rect x="255" y="238" width="210" height="14" fill="#ECC94B"/>
+  <text x="360" y="242" text-anchor="middle" font-size="11" fill="#744210" font-weight="700">🛡️ Middleware</text>
+  <text x="360" y="272" text-anchor="middle" font-size="11" fill="#2D3748" font-weight="600">Auth Guard (proxy.ts)</text>
+  <text x="360" y="290" text-anchor="middle" font-size="10" fill="#718096">Protected Routes:</text>
+  <text x="360" y="306" text-anchor="middle" font-size="10" fill="#718096">/me · /reviews · /dashboard</text>
+  <text x="360" y="320" text-anchor="middle" font-size="10" fill="#718096">→ Redirect to /login</text>
+
+  <!-- App Router Pages box -->
+  <rect x="485" y="224" width="290" height="100" fill="#FFFFFF" stroke="#48BB78" stroke-width="2" rx="8"/>
+  <rect x="485" y="224" width="290" height="28" fill="#48BB78" rx="8"/>
+  <rect x="485" y="238" width="290" height="14" fill="#48BB78"/>
+  <text x="630" y="242" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">📄 App Router Pages</text>
+  <text x="510" y="270" font-size="10" fill="#2D3748">/ (홈)  ·  /product/[id]  ·  /category</text>
+  <text x="510" y="286" font-size="10" fill="#2D3748">/cart  ·  /payment  ·  /orders/[orderId]</text>
+  <text x="510" y="302" font-size="10" fill="#2D3748">/reviews  ·  /me  ·  /address  ·  /search</text>
+  <text x="510" y="318" font-size="10" fill="#2D3748">/login  ·  /body-info  ·  /review/write</text>
+
+  <!-- API Routes (BFF) box -->
+  <rect x="795" y="224" width="320" height="100" fill="#FFFFFF" stroke="#4FD1C5" stroke-width="2" rx="8"/>
+  <rect x="795" y="224" width="320" height="28" fill="#4FD1C5" rx="8"/>
+  <rect x="795" y="238" width="320" height="14" fill="#4FD1C5"/>
+  <text x="955" y="242" text-anchor="middle" font-size="11" fill="#234E52" font-weight="700">🔀 API Routes (BFF Layer)</text>
+  <text x="820" y="270" font-size="10" fill="#2D3748">/api/auth/[...nextauth]</text>
+  <text x="820" y="286" font-size="10" fill="#2D3748">/api/search/recommend</text>
+  <text x="820" y="302" font-size="10" fill="#2D3748">/api/search/autocomplete</text>
+  <text x="820" y="318" font-size="10" fill="#2D3748">/api/reviews/[reviewId]/details  ·  /api/reviews/images</text>
+
+  <!-- === Row 2 in Next.js === -->
+  <!-- NextAuth box -->
+  <rect x="255" y="342" width="210" height="100" fill="#FFFFFF" stroke="#FC8181" stroke-width="2" rx="8"/>
+  <rect x="255" y="342" width="210" height="28" fill="#FC8181" rx="8"/>
+  <rect x="255" y="356" width="210" height="14" fill="#FC8181"/>
+  <text x="360" y="360" text-anchor="middle" font-size="11" fill="#63171B" font-weight="700">🔐 NextAuth v5</text>
+  <text x="360" y="388" text-anchor="middle" font-size="11" fill="#2D3748" font-weight="600">JWT Token Strategy</text>
+  <text x="360" y="404" text-anchor="middle" font-size="10" fill="#718096">Credentials Provider</text>
+  <text x="360" y="420" text-anchor="middle" font-size="10" fill="#718096">Token Auto-Refresh</text>
+  <text x="360" y="436" text-anchor="middle" font-size="10" fill="#718096">auth.ts · auth.config.ts</text>
+
+  <!-- Server Actions box -->
+  <rect x="485" y="342" width="290" height="100" fill="#FFFFFF" stroke="#9F7AEA" stroke-width="2" rx="8"/>
+  <rect x="485" y="342" width="290" height="28" fill="#9F7AEA" rx="8"/>
+  <rect x="485" y="356" width="290" height="14" fill="#9F7AEA"/>
+  <text x="630" y="360" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">⚡ Server Actions</text>
+  <text x="510" y="388" font-size="10" fill="#2D3748">cart · order · product · category</text>
+  <text x="510" y="404" font-size="10" fill="#2D3748">review · address · wishlist · user</text>
+  <text x="510" y="420" font-size="10" fill="#2D3748">body-info · push notification</text>
+  <text x="510" y="436" font-size="10" fill="#718096">src/app/actions/</text>
+
+  <!-- API Client box -->
+  <rect x="795" y="342" width="320" height="100" fill="#FFFFFF" stroke="#4299E1" stroke-width="2" rx="8"/>
+  <rect x="795" y="342" width="320" height="28" fill="#4299E1" rx="8"/>
+  <rect x="795" y="356" width="320" height="14" fill="#4299E1"/>
+  <text x="955" y="360" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">🔌 API Client (fetchWrapper)</text>
+  <text x="820" y="388" font-size="10" fill="#2D3748">Bearer Token 자동 첨부</text>
+  <text x="820" y="404" font-size="10" fill="#2D3748">GET · POST · PUT · PATCH · DELETE</text>
+  <text x="820" y="420" font-size="10" fill="#2D3748">Query Params 자동 직렬화</text>
+  <text x="820" y="436" font-size="10" fill="#718096">src/lib/api-client.ts</text>
+
+  <!-- === Row 3 in Next.js: Components === -->
+  <rect x="255" y="460" width="860" height="80" fill="#FFFFFF" stroke="#48BB78" stroke-width="1.5" rx="8" stroke-dasharray="6,3"/>
+  <text x="275" y="484" font-size="11" fill="#2D3748" font-weight="600">🧩 Components &amp; Libraries</text>
+  <!-- Component items -->
+  <rect x="275" y="492" width="115" height="36" fill="#EBF4FF" stroke="#4299E1" stroke-width="1" rx="5"/>
+  <text x="332" y="512" text-anchor="middle" font-size="10" fill="#2C5282" font-weight="600">Radix UI</text>
+  <text x="332" y="524" text-anchor="middle" font-size="9" fill="#718096">shadcn/ui</text>
+  <rect x="400" y="492" width="115" height="36" fill="#F0FFF4" stroke="#48BB78" stroke-width="1" rx="5"/>
+  <text x="457" y="512" text-anchor="middle" font-size="10" fill="#22543D" font-weight="600">TailwindCSS v4</text>
+  <text x="457" y="524" text-anchor="middle" font-size="9" fill="#718096">cva · clsx</text>
+  <rect x="525" y="492" width="115" height="36" fill="#FFF5F5" stroke="#FC8181" stroke-width="1" rx="5"/>
+  <text x="582" y="512" text-anchor="middle" font-size="10" fill="#63171B" font-weight="600">React Hook Form</text>
+  <text x="582" y="524" text-anchor="middle" font-size="9" fill="#718096">+ Zod v4</text>
+  <rect x="650" y="492" width="115" height="36" fill="#FAF5FF" stroke="#9F7AEA" stroke-width="1" rx="5"/>
+  <text x="707" y="512" text-anchor="middle" font-size="10" fill="#44337A" font-weight="600">Zustand v5</text>
+  <text x="707" y="524" text-anchor="middle" font-size="9" fill="#718096">Cart Store</text>
+  <rect x="775" y="492" width="115" height="36" fill="#FFFFF0" stroke="#ECC94B" stroke-width="1" rx="5"/>
+  <text x="832" y="512" text-anchor="middle" font-size="10" fill="#744210" font-weight="600">Embla Carousel</text>
+  <text x="832" y="524" text-anchor="middle" font-size="9" fill="#718096">date-fns · lucide</text>
+  <rect x="900" y="492" width="200" height="36" fill="#E6FFFA" stroke="#4FD1C5" stroke-width="1" rx="5"/>
+  <text x="1000" y="512" text-anchor="middle" font-size="10" fill="#234E52" font-weight="600">React Day Picker</text>
+  <text x="1000" y="524" text-anchor="middle" font-size="9" fill="#718096">Daum Postcode · web-push</text>
+
+  <!-- ========== ARROWS: Next.js → Bottom layers ========== -->
+  <!-- Arrow down to Client State -->
+  <line x1="430" y1="550" x2="250" y2="622" stroke="#ED8936" stroke-width="2" marker-end="url(#arrowOrange)"/>
+  <!-- Arrow down to Backend -->
+  <line x1="800" y1="550" x2="900" y2="622" stroke="#48BB78" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <!-- Arrow down to External -->
+  <line x1="1050" y1="550" x2="1090" y2="622" stroke="#9F7AEA" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <!-- ========== LAYER 3A: CLIENT-SIDE STATE ========== -->
+  <rect x="40" y="628" width="340" height="210" fill="#FFFAF0" stroke="#ED8936" stroke-width="2" rx="12" filter="url(#shadow)"/>
+  <rect x="40" y="628" width="340" height="36" fill="#ED8936" rx="12"/>
+  <rect x="40" y="648" width="340" height="16" fill="#ED8936"/>
+  <text x="210" y="652" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="700">💾 Client-Side State &amp; Forms</text>
+  <!-- Zustand -->
+  <rect x="58" y="678" width="145" height="70" fill="#FFFFFF" stroke="#ED8936" stroke-width="1.5" rx="8"/>
+  <text x="130" y="700" text-anchor="middle" font-size="12" fill="#2D3748" font-weight="700">Zustand v5</text>
+  <text x="130" y="716" text-anchor="middle" font-size="10" fill="#718096">Cart Count Store</text>
+  <text x="130" y="730" text-anchor="middle" font-size="10" fill="#718096">useCartStore</text>
+  <text x="130" y="744" text-anchor="middle" font-size="9" fill="#A0AEC0">src/store/cart.ts</text>
+  <!-- Hooks -->
+  <rect x="217" y="678" width="145" height="70" fill="#FFFFFF" stroke="#ED8936" stroke-width="1.5" rx="8"/>
+  <text x="289" y="700" text-anchor="middle" font-size="12" fill="#2D3748" font-weight="700">Custom Hooks</text>
+  <text x="289" y="716" text-anchor="middle" font-size="10" fill="#718096">use-wishlist.ts</text>
+  <text x="289" y="730" text-anchor="middle" font-size="10" fill="#718096">서버 액션 연동</text>
+  <text x="289" y="744" text-anchor="middle" font-size="9" fill="#A0AEC0">src/hooks/</text>
+  <!-- Schemas -->
+  <rect x="58" y="760" width="304" height="68" fill="#FFFFFF" stroke="#ED8936" stroke-width="1.5" rx="8"/>
+  <text x="210" y="782" text-anchor="middle" font-size="11" fill="#2D3748" font-weight="700">Zod Schemas + React Hook Form</text>
+  <text x="210" y="798" text-anchor="middle" font-size="10" fill="#718096">address · body-info · review · login</text>
+  <text x="210" y="814" text-anchor="middle" font-size="10" fill="#718096">폼 유효성 검사 + 타입 안전성</text>
+  <text x="210" y="828" text-anchor="middle" font-size="9" fill="#A0AEC0">src/schemas/</text>
+
+  <!-- ========== LAYER 3B: BACKEND ========== -->
+  <rect x="420" y="628" width="400" height="210" fill="#F0FFF4" stroke="#48BB78" stroke-width="2" rx="12" filter="url(#shadow)"/>
+  <rect x="420" y="628" width="400" height="36" fill="#38A169" rx="12"/>
+  <rect x="420" y="648" width="400" height="16" fill="#38A169"/>
+  <text x="620" y="652" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="700">🖥️ Backend API Server</text>
+  <!-- Domains -->
+  <rect x="438" y="678" width="175" height="148" fill="#FFFFFF" stroke="#48BB78" stroke-width="1.5" rx="8"/>
+  <text x="525" y="700" text-anchor="middle" font-size="11" fill="#2D3748" font-weight="700">API Domains</text>
+  <text x="455" y="720" font-size="10" fill="#2D3748">🛍️ Products · Category</text>
+  <text x="455" y="736" font-size="10" fill="#2D3748">🛒 Cart · Orders</text>
+  <text x="455" y="752" font-size="10" fill="#2D3748">💳 Payment</text>
+  <text x="455" y="768" font-size="10" fill="#2D3748">⭐ Reviews</text>
+  <text x="455" y="784" font-size="10" fill="#2D3748">👤 Users · Auth</text>
+  <text x="455" y="800" font-size="10" fill="#2D3748">📍 Address</text>
+  <text x="455" y="816" font-size="10" fill="#2D3748">❤️ Wishlist · Brand</text>
+  <!-- Auth Details -->
+  <rect x="623" y="678" width="179" height="148" fill="#FFFFFF" stroke="#48BB78" stroke-width="1.5" rx="8"/>
+  <text x="712" y="700" text-anchor="middle" font-size="11" fill="#2D3748" font-weight="700">인증 방식</text>
+  <text x="640" y="722" font-size="10" fill="#2D3748">🔑 JWT Access Token</text>
+  <text x="640" y="740" font-size="10" fill="#2D3748">🔄 Refresh Token</text>
+  <text x="640" y="758" font-size="10" fill="#718096">자동 토큰 갱신</text>
+  <text x="640" y="776" font-size="10" fill="#718096">(TOKEN_REFRESH_BUFFER)</text>
+  <text x="640" y="800" font-size="10" fill="#2D3748">ENV: BACKEND_API_URL</text>
+  <text x="640" y="820" font-size="9" fill="#A0AEC0">src/lib/api-client.ts</text>
+
+  <!-- ========== LAYER 3C: EXTERNAL SERVICES ========== -->
+  <rect x="860" y="628" width="300" height="210" fill="#FAF5FF" stroke="#9F7AEA" stroke-width="2" rx="12" filter="url(#shadow)"/>
+  <rect x="860" y="628" width="300" height="36" fill="#805AD5" rx="12"/>
+  <rect x="860" y="648" width="300" height="16" fill="#805AD5"/>
+  <text x="1010" y="652" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="700">🌐 External Services</text>
+  <!-- Web Push -->
+  <rect x="878" y="678" width="262" height="60" fill="#FFFFFF" stroke="#9F7AEA" stroke-width="1.5" rx="8"/>
+  <text x="1009" y="700" text-anchor="middle" font-size="12" fill="#2D3748" font-weight="700">Web Push API</text>
+  <text x="1009" y="716" text-anchor="middle" font-size="10" fill="#718096">web-push 라이브러리</text>
+  <text x="1009" y="730" text-anchor="middle" font-size="10" fill="#718096">PWA 푸시 알림</text>
+  <!-- Daum Postcode -->
+  <rect x="878" y="750" width="262" height="60" fill="#FFFFFF" stroke="#9F7AEA" stroke-width="1.5" rx="8"/>
+  <text x="1009" y="772" text-anchor="middle" font-size="12" fill="#2D3748" font-weight="700">Daum Postcode API</text>
+  <text x="1009" y="788" text-anchor="middle" font-size="10" fill="#718096">react-daum-postcode</text>
+  <text x="1009" y="804" text-anchor="middle" font-size="10" fill="#718096">주소 검색</text>
+
+  <!-- ========== LEGEND ========== -->
+  <rect x="40" y="848" width="1120" height="24" fill="#2D3748" rx="6"/>
+  <text x="50" y="864" font-size="10" fill="#4299E1">■</text>
+  <text x="62" y="864" font-size="10" fill="#A0AEC0">사용자 레이어</text>
+  <text x="175" y="864" font-size="10" fill="#48BB78">■</text>
+  <text x="187" y="864" font-size="10" fill="#A0AEC0">Next.js App</text>
+  <text x="280" y="864" font-size="10" fill="#ECC94B">■</text>
+  <text x="292" y="864" font-size="10" fill="#A0AEC0">Middleware</text>
+  <text x="375" y="864" font-size="10" fill="#FC8181">■</text>
+  <text x="387" y="864" font-size="10" fill="#A0AEC0">NextAuth</text>
+  <text x="455" y="864" font-size="10" fill="#9F7AEA">■</text>
+  <text x="467" y="864" font-size="10" fill="#A0AEC0">Server Actions</text>
+  <text x="565" y="864" font-size="10" fill="#ED8936">■</text>
+  <text x="577" y="864" font-size="10" fill="#A0AEC0">Client State</text>
+  <text x="662" y="864" font-size="10" fill="#38A169">■</text>
+  <text x="674" y="864" font-size="10" fill="#A0AEC0">Backend API</text>
+  <text x="760" y="864" font-size="10" fill="#805AD5">■</text>
+  <text x="772" y="864" font-size="10" fill="#A0AEC0">External Services</text>
+  <text x="900" y="864" font-size="10" fill="#718096">Stack: Next.js 16 · TypeScript · TailwindCSS v4 · pnpm</text>
+</svg>
