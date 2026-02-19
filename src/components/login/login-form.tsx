@@ -54,10 +54,11 @@ export default function LoginForm() {
       <div className="absolute inset-0 bg-white/60" />
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="mb-10 flex flex-col items-center gap-4">
-          <Image src="/ongil.svg" alt="온길" width={180} height={54} priority />
-          <Image src="/gil.svg" alt="길" width={90} height={30} priority />
-          <p className="my-5 text-center text-[24px] font-semibold text-black">
+        <div className="mb-10 flex flex-col items-center gap-0">
+          <Image src="/ongil.svg" alt="온길" width={165} height={50} priority />
+          <div className="h-[40px]" />
+          <Image src="/gil.svg" alt="길" width={82} height={27} priority />
+          <p className="font-pretendard mt-[80px] mb-5 text-center text-[24px] font-bold text-black">
             온길과 함께 걷는 편안한 쇼핑길
           </p>
         </div>
@@ -68,22 +69,22 @@ export default function LoginForm() {
           </div>
         )}
 
-        <div className="space-y-4">
+        <div className="mx-auto w-full max-w-[320px] space-y-4">
           <button
             onClick={() => handleSocialLogin('kakao')}
             disabled={isLoading}
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#FEE500] px-4 py-3 text-sm font-semibold text-black shadow-sm transition-colors hover:bg-[#FDD835] focus:outline-none disabled:opacity-50"
+            className="font-pretendard flex w-full items-center justify-center gap-3 rounded-lg bg-[#FEE500] px-4 py-4 text-[24px] font-bold text-black shadow-sm transition-colors hover:bg-[#FDD835] focus:outline-none disabled:opacity-50"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
               <path d="M12 3C5.373 3 0 6.697 0 11.258c0 2.925 2.228 5.494 5.61 6.836-.254.936-1.077 3.822-1.22 4.414-.142.593.24.606.52.41 1.08-.76 4.755-3.23 5.474-3.722.533.076 1.08.115 1.638.115 6.627 0 12-3.697 12-8.258C24 6.697 18.627 3 12 3z" />
             </svg>
-            카카오로 로그인
+            카카오로 시작하기
           </button>
 
           <button
             onClick={() => handleSocialLogin('google')}
             disabled={isLoading}
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none disabled:opacity-50"
+            className="font-pretendard flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-4 text-[24px] font-bold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none disabled:opacity-50"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5">
               <path
@@ -103,7 +104,7 @@ export default function LoginForm() {
                 fill="#EA4335"
               />
             </svg>
-            구글로 로그인
+            구글로 시작하기
           </button>
         </div>
       </div>
