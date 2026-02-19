@@ -434,10 +434,10 @@ export function ProductFilterBar({
       {openSheet === 'sort' && (
         <>
           <div
-            className="fixed inset-0 z-50 bg-black/10"
+            className="fixed inset-0 z-[70] bg-black/10"
             onClick={() => setOpenSheet(null)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 rounded-t-[22px] bg-white px-6 pt-6 pb-10 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
+          <div className="fixed inset-x-0 bottom-0 z-[71] rounded-t-[22px] bg-white px-6 pt-6 pb-10 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
             <div className="mx-auto w-full max-w-7xl">
               <div className="relative mb-8 flex items-center justify-center">
                 <h3 className="text-2xl font-bold text-black">정렬</h3>
@@ -504,10 +504,10 @@ export function ProductFilterBar({
       {openSheet === 'filters' && (
         <>
           <div
-            className="fixed inset-0 z-50 bg-black/10"
+            className="fixed inset-0 z-[70] bg-black/10"
             onClick={() => setOpenSheet(null)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 rounded-t-[22px] bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
+          <div className="fixed inset-x-0 bottom-0 z-[71] rounded-t-[22px] bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
             <div className="mx-auto w-full max-w-7xl">
               <div className="relative flex items-center justify-end px-4 pt-4 pb-2">
                 <button

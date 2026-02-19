@@ -10,7 +10,14 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface SearchPageProps {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    sortType?: string;
+    page?: string;
+    clothingSizes?: string | string[];
+    priceRange?: string | string[];
+    brandIds?: string | string[];
+  }>;
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
@@ -25,7 +32,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <SearchEmpty />
         ) : (
           <Suspense fallback={<SearchLoading />}>
-            <SearchContent query={query} />
+            <SearchContent query={query} searchParams={params} />
           </Suspense>
         )}
       </div>
