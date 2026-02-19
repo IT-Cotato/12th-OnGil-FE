@@ -1,6 +1,5 @@
 import { getSubCategories } from '@/app/actions/category';
 import { api } from '@/lib/api-client';
-import { BrandWithProducts } from '@/types/domain/brand';
 import { ProductSearchResult } from '@/types/domain/product';
 import { ProductSortType } from '@/types/enums';
 import { BrandFilterOption, ProductFilterBar } from './product-filter-bar';
@@ -17,10 +16,6 @@ interface ProductFilterBarContainerProps {
 }
 
 const PRICE_RANGE_PATTERN = /^\d+-\d+$/;
-
-function normalizeBrandName(value: string) {
-  return value.trim().toLowerCase().replace(/\s+/g, '');
-}
 
 function normalizeArray(value?: string | string[]) {
   if (Array.isArray(value)) {
@@ -94,50 +89,20 @@ export default async function ProductFilterBarContainer({
     brandName: string;
     brandId?: number;
   }>;
-  const brandsFromProducts = Array.from(
-    new Set(
-      productItems
-        .map((product) => product.brandName.trim())
-        .filter((brandName) => brandName.length > 0),
-    ),
-  );
-
-  const recommendedBrands = await api
-    .get<BrandWithProducts[]>('/brands/recommend', { params: { count: 200 } })
-    .catch(() => []);
-
-  const brandIdByNormalizedName = new Map<string, number>();
-  productItems.forEach((product) => {
-    const normalized = normalizeBrandName(product.brandName);
-    if (!normalized) return;
-    if (Number.isFinite(product.brandId) && (product.brandId as number) > 0) {
-      brandIdByNormalizedName.set(normalized, product.brandId as number);
-    }
-  });
-  recommendedBrands.forEach((brand) => {
-    const normalized = normalizeBrandName(brand.name);
-    if (!normalized || brandIdByNormalizedName.has(normalized)) return;
-    brandIdByNormalizedName.set(normalized, brand.id);
-  });
-
-  const mappedFromProducts = brandsFromProducts
-    .map((name) => {
-      const id = brandIdByNormalizedName.get(normalizeBrandName(name));
-      if (!id) return null;
-      return { id, name };
-    })
-    .filter((item): item is BrandFilterOption => item !== null);
-
-  const mappedFromRecommended: BrandFilterOption[] = recommendedBrands.map(
-    (brand) => ({ id: brand.id, name: brand.name }),
-  );
-
   const availableBrands = Array.from(
     new Map(
-      [...mappedFromProducts, ...mappedFromRecommended].map((brand) => [
-        String(brand.id),
-        brand,
-      ]),
+      productItems
+        .map((product) => {
+          const id = Number(product.brandId);
+          const name = product.brandName.trim();
+          if (!Number.isFinite(id) || id <= 0 || name.length === 0) return null;
+          return [String(id), { id, name }] as const;
+        })
+        .filter(
+          (
+            item,
+          ): item is readonly [string, BrandFilterOption] => item !== null,
+        ),
     ).values(),
   ).sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 

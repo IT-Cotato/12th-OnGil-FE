@@ -225,7 +225,7 @@ export function ProductFilterBar({
               >
                 <div className="flex flex-col items-center leading-tight">
                   <span className="text-lg font-semibold">{option.label}</span>
-                  <span className="mt-1 text-sm font-medium text-gray-500">
+                  <span className="mt-1 text-[18px] font-semibold text-gray-500">
                     ({option.description})
                   </span>
                 </div>
