@@ -32,8 +32,8 @@ export default async function Home() {
         }
       >
         <RecommendProductContainer
-          endpoint="/products/special-sale"
-          heading="특가 상품"
+          endpoint="/products/recommend"
+          heading="추천 상품"
         />
       </Suspense>
 
@@ -43,8 +43,8 @@ export default async function Home() {
         }
       >
         <RecommendProductContainer
-          endpoint="/products/recommend"
-          heading="추천 상품"
+          endpoint="/products/special-sale"
+          heading="특가 상품"
         />
       </Suspense>
 
