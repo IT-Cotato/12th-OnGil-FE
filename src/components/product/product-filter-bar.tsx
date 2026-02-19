@@ -112,20 +112,22 @@ export function ProductFilterBar({
     return TOP_SIZE_OPTIONS;
   }, [parentCategoryName]);
 
-  const mergedBrandOptions = useMemo(() => {
-    const selectedOptionBackfills = selectedBrandIds
-      .map((id) => {
-        const found = availableBrands.find((option) => String(option.id) === id);
-        return found ?? { id: Number(id), name: `브랜드 ${id}` };
-      })
-      .filter((option) => Number.isFinite(option.id));
+  const availableBrandIdSet = useMemo(
+    () => new Set(availableBrands.map((option) => String(option.id))),
+    [availableBrands],
+  );
 
-    const merged = [...availableBrands, ...selectedOptionBackfills];
+  const validSelectedBrandIds = useMemo(
+    () => selectedBrandIds.filter((id) => availableBrandIdSet.has(id)),
+    [selectedBrandIds, availableBrandIdSet],
+  );
+
+  const mergedBrandOptions = useMemo(() => {
     const uniqueById = Array.from(
-      new Map(merged.map((item) => [String(item.id), item])).values(),
+      new Map(availableBrands.map((item) => [String(item.id), item])).values(),
     );
     return uniqueById.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
-  }, [availableBrands, selectedBrandIds]);
+  }, [availableBrands]);
 
   const filteredBrands = useMemo(() => {
     const keyword = brandKeyword.trim().toLowerCase();
@@ -138,7 +140,7 @@ export function ProductFilterBar({
   const currentSortLabel =
     SORT_OPTIONS.find((option) => option.value === currentSort)?.label || '인기순';
   const hasSizeFilter = selectedSizes.length > 0;
-  const hasBrandFilter = selectedBrandIds.length > 0;
+  const hasBrandFilter = validSelectedBrandIds.length > 0;
   const hasPriceFilter = Boolean(selectedPriceRange);
 
   const tempChips = [
@@ -172,7 +174,7 @@ export function ProductFilterBar({
   const openFilterSheet = (tab: FilterTab) => {
     setTempSizes([...selectedSizes]);
     setTempPriceRange(selectedPriceRange);
-    setTempBrandIds([...selectedBrandIds]);
+    setTempBrandIds([...validSelectedBrandIds]);
     if (isValidPriceRange(selectedPriceRange)) {
       const [min, max] = selectedPriceRange.split('-');
       setCustomMinPrice(min);
@@ -416,7 +418,7 @@ export function ProductFilterBar({
               hasBrandFilter ? 'bg-ongil-mint' : 'bg-white'
             }`}
           >
-            브랜드{selectedBrandIds.length > 0 ? selectedBrandIds.length : ''}
+            브랜드{validSelectedBrandIds.length > 0 ? validSelectedBrandIds.length : ''}
           </button>
 
           <button
