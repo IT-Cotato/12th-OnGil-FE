@@ -1,6 +1,6 @@
 'use server';
 
-import { api } from '@/lib/api-client';
+import { publicApi } from '@/lib/public-api-client';
 import { rethrowNextError } from '@/lib/server-action-utils';
 import type {
   Product,
@@ -13,7 +13,9 @@ export async function getProductDetail(
   productId: number,
 ): Promise<ProductDetail> {
   try {
-    const product = await api.get<ProductDetail>(`/products/${productId}`);
+    const product = await publicApi.get<ProductDetail>(
+      `/products/${productId}`,
+    );
     return product;
   } catch (error) {
     rethrowNextError(error);
@@ -29,7 +31,9 @@ export async function getSimilarProducts(
   productId: number,
 ): Promise<Product[]> {
   try {
-    const products = await api.get<Product[]>(`/products/${productId}/similar`);
+    const products = await publicApi.get<Product[]>(
+      `/products/${productId}/similar`,
+    );
     return products;
   } catch (error) {
     rethrowNextError(error);
@@ -43,7 +47,7 @@ export async function getProductOptions(
   productId: number,
 ): Promise<ProductOption[]> {
   try {
-    const options = await api.get<ProductOption[]>(
+    const options = await publicApi.get<ProductOption[]>(
       `/products/${productId}/options`,
     );
     return options;

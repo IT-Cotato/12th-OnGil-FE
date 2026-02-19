@@ -11,7 +11,6 @@ export { ProductFilterBar } from './product-filter-bar';
 export { ProductImageSlider } from './product-image-slider';
 export { default as ProductInfo } from './product-info';
 export { default as ProductTab } from './product-tab';
-export { default as ProductDetailView } from './product-detail-view';
 
 // ----------------------------------------------------------------------
 // 3. 상품 상세 - 설명 및 레이아웃

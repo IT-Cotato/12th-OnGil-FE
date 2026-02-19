@@ -18,6 +18,7 @@ type FlowStep = 1 | 2;
 
 interface ReviewWriteFlowProps {
   reviewId: number;
+  productId: number;
   clothingCategory: string;
   productThumbnailImageUrl: string;
   productName: string;
@@ -75,6 +76,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5] as const;
 
 export default function ReviewWriteFlow({
   reviewId,
+  productId,
   clothingCategory,
   productThumbnailImageUrl,
   productName,
@@ -102,7 +104,7 @@ export default function ReviewWriteFlow({
   const [isImageUploading, setIsImageUploading] = useState(false);
 
   const [rating, setRating] = useState(
-    typeof initialRating === 'number' && initialRating > 0 ? initialRating : 5,
+    typeof initialRating === 'number' && initialRating > 0 ? initialRating : 0,
   );
   const [sizeAnswer, setSizeAnswer] = useState(
     initialStep1Answers?.sizeAnswer ?? '',
@@ -138,9 +140,9 @@ export default function ReviewWriteFlow({
   const [materialDraftReview, setMaterialDraftReview] = useState('');
   const sizeTextareaRefs = useRef<Array<HTMLTextAreaElement | null>>([]);
   const materialTextareaRefs = useRef<Array<HTMLTextAreaElement | null>>([]);
-  const [pendingSizeFocusIndex, setPendingSizeFocusIndex] = useState<number | null>(
-    null,
-  );
+  const [pendingSizeFocusIndex, setPendingSizeFocusIndex] = useState<
+    number | null
+  >(null);
   const [pendingMaterialFocusIndex, setPendingMaterialFocusIndex] = useState<
     number | null
   >(null);
@@ -376,14 +378,22 @@ export default function ReviewWriteFlow({
         }
       }
 
-      const result = await submitReviewAction(reviewId, {
-        textReview,
-        reviewImageUrls,
-        sizeReview: sizeReviewItems.map((item) => item.trim()).filter(Boolean),
-        materialReview: materialReviewItems
-          .map((item) => item.trim())
-          .filter(Boolean),
-      });
+      const result = await submitReviewAction(
+        reviewId,
+        {
+          textReview,
+          reviewImageUrls,
+          sizeReview: sizeReviewItems
+            .map((item) => item.trim())
+            .filter(Boolean),
+          materialReview: materialReviewItems
+            .map((item) => item.trim())
+            .filter(Boolean),
+        },
+        {
+          productId,
+        },
+      );
 
       if (!result.success) {
         setErrorMessage(result.message || '리뷰 제출에 실패했습니다.');
@@ -408,7 +418,9 @@ export default function ReviewWriteFlow({
       if (shouldGenerateSizeAiReview) {
         const sizeResult = await generateSizeAiReviewAction(reviewId);
         if (!sizeResult.success || !sizeResult.data) {
-          setErrorMessage(sizeResult.message || '사이즈 AI 생성에 실패했습니다.');
+          setErrorMessage(
+            sizeResult.message || '사이즈 AI 생성에 실패했습니다.',
+          );
           return;
         }
         setSizeReviewItems(sizeResult.data.aiGeneratedReviews ?? []);
@@ -483,7 +495,9 @@ export default function ReviewWriteFlow({
             };
 
           if (!response.ok) {
-            throw new Error(payload.message || '리뷰 이미지 업로드에 실패했습니다.');
+            throw new Error(
+              payload.message || '리뷰 이미지 업로드에 실패했습니다.',
+            );
           }
           return payload.data;
         };
@@ -539,25 +553,25 @@ export default function ReviewWriteFlow({
       <div className="sticky top-[68px] z-[5] bg-white px-5 py-2">
         <div className="flex items-start justify-between">
           <div className="flex flex-1 items-start">
-          <div className="flex flex-col items-center gap-1">
-            <Image
-              src={
-                step === 1
-                  ? '/icons/basic-info.svg'
-                  : '/icons/basic-info-gray.svg'
-              }
-              alt="기본정보 단계"
-              width={48}
-              height={48}
-            />
-            <span
-              className={`text-[18px] font-medium ${
-                step === 1 ? 'text-[#223435]' : 'text-[#8a8a8a]'
-              }`}
-            >
-              기본 정보
-            </span>
-          </div>
+            <div className="flex flex-col items-center gap-1">
+              <Image
+                src={
+                  step === 1
+                    ? '/icons/basic-info.svg'
+                    : '/icons/basic-info-gray.svg'
+                }
+                alt="기본정보 단계"
+                width={48}
+                height={48}
+              />
+              <span
+                className={`text-[18px] font-medium ${
+                  step === 1 ? 'text-[#223435]' : 'text-[#8a8a8a]'
+                }`}
+              >
+                기본 정보
+              </span>
+            </div>
             <div className="mt-6 h-[2px] flex-1 rounded-full bg-[#d9d9d9]">
               <div
                 className={`h-full rounded-full bg-[#223435] transition-all duration-200 ${
@@ -661,7 +675,7 @@ export default function ReviewWriteFlow({
               <p className="text-2xl font-semibold text-black">
                 1. 입었을 때 어때요?
               </p>
-            <div className="-mx-5 grid grid-cols-5 gap-2 bg-[#F9FAFB] pt-5">
+              <div className="-mx-5 grid grid-cols-5 gap-2 bg-[#F9FAFB] pt-5">
                 {sizeAnswerOptions.map((option) => (
                   <button
                     key={option.value}
@@ -879,7 +893,7 @@ export default function ReviewWriteFlow({
               type="button"
               onClick={handleGenerateAiReviews}
               disabled={isPending || !canGenerateAiReviews}
-              className="w-full rounded-2xl bg-[#00363d] py-3 text-[24px] font-semibold leading-none text-white disabled:opacity-60"
+              className="w-full rounded-2xl bg-[#00363d] py-3 text-[24px] leading-none font-semibold text-white disabled:opacity-60"
             >
               후기 문장 받아보기
             </button>
@@ -891,7 +905,9 @@ export default function ReviewWriteFlow({
           <div className="space-y-3 bg-white px-5 py-4">
             <div className="flex items-center gap-2">
               <Image src="/icons/ai-star.svg" alt="" width={18} height={18} />
-              <p className="text-2xl font-semibold text-[#1c1c1c]">사이즈 관련</p>
+              <p className="text-2xl font-semibold text-[#1c1c1c]">
+                사이즈 관련
+              </p>
             </div>
             <p className="text-base text-[#7d7d7d]">
               후기 문장을 받거나 문장을 직접 추가할 수 있어요
@@ -899,7 +915,10 @@ export default function ReviewWriteFlow({
             <div className="space-y-2">
               <div className="divide-y divide-[#e3e3e3] rounded-md bg-white">
                 {sizeReviewItems.map((item, index) => (
-                  <div key={`size-review-${index}`} className="flex items-center">
+                  <div
+                    key={`size-review-${index}`}
+                    className="flex items-center"
+                  >
                     <textarea
                       rows={1}
                       ref={(element) => {
@@ -914,26 +933,26 @@ export default function ReviewWriteFlow({
                           );
                         }
                       }}
-                      className="min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium whitespace-pre-wrap break-words text-[#1c1c1c] outline-none focus:border-ongil-teal focus:outline focus:outline-1 focus:outline-ongil-teal"
+                      className="focus:border-ongil-teal focus:outline-ongil-teal min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium break-words whitespace-pre-wrap text-[#1c1c1c] outline-none focus:outline focus:outline-1"
                       value={item}
                       onChange={(e) => {
-                          const next = [...sizeReviewItems];
-                          next[index] = e.target.value;
-                          setSizeReviewItems(next);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setSizeReviewItems((prev) =>
-                            prev.filter((_, itemIndex) => itemIndex !== index),
-                          )
-                        }
-                        className="px-4 text-[28px] leading-none text-[#8e8e8e]"
-                        aria-label="사이즈 문장 삭제"
-                      >
-                        ×
-                      </button>
+                        const next = [...sizeReviewItems];
+                        next[index] = e.target.value;
+                        setSizeReviewItems(next);
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSizeReviewItems((prev) =>
+                          prev.filter((_, itemIndex) => itemIndex !== index),
+                        )
+                      }
+                      className="px-4 text-[28px] leading-none text-[#8e8e8e]"
+                      aria-label="사이즈 문장 삭제"
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
                 <div className="flex items-center">
@@ -953,7 +972,7 @@ export default function ReviewWriteFlow({
                         commitSizeDraftReview();
                       }
                     }}
-                    className="min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium whitespace-pre-wrap break-words text-[#1c1c1c] outline-none focus:border-ongil-teal focus:outline focus:outline-1 focus:outline-ongil-teal"
+                    className="focus:border-ongil-teal focus:outline-ongil-teal min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium break-words whitespace-pre-wrap text-[#1c1c1c] outline-none focus:outline focus:outline-1"
                     value={sizeDraftReview}
                     onChange={(e) => setSizeDraftReview(e.target.value)}
                   />
@@ -981,7 +1000,10 @@ export default function ReviewWriteFlow({
             <div className="space-y-2">
               <div className="divide-y divide-[#e3e3e3] rounded-md bg-white">
                 {materialReviewItems.map((item, index) => (
-                  <div key={`material-review-${index}`} className="flex items-center">
+                  <div
+                    key={`material-review-${index}`}
+                    className="flex items-center"
+                  >
                     <textarea
                       rows={1}
                       ref={(element) => {
@@ -996,26 +1018,26 @@ export default function ReviewWriteFlow({
                           );
                         }
                       }}
-                      className="min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium whitespace-pre-wrap break-words text-[#1c1c1c] outline-none focus:border-ongil-teal focus:outline focus:outline-1 focus:outline-ongil-teal"
+                      className="focus:border-ongil-teal focus:outline-ongil-teal min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium break-words whitespace-pre-wrap text-[#1c1c1c] outline-none focus:outline focus:outline-1"
                       value={item}
                       onChange={(e) => {
-                          const next = [...materialReviewItems];
-                          next[index] = e.target.value;
-                          setMaterialReviewItems(next);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setMaterialReviewItems((prev) =>
-                            prev.filter((_, itemIndex) => itemIndex !== index),
-                          )
-                        }
-                        className="px-4 text-[28px] leading-none text-[#8e8e8e]"
-                        aria-label="소재 문장 삭제"
-                      >
-                        ×
-                      </button>
+                        const next = [...materialReviewItems];
+                        next[index] = e.target.value;
+                        setMaterialReviewItems(next);
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setMaterialReviewItems((prev) =>
+                          prev.filter((_, itemIndex) => itemIndex !== index),
+                        )
+                      }
+                      className="px-4 text-[28px] leading-none text-[#8e8e8e]"
+                      aria-label="소재 문장 삭제"
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
                 <div className="flex items-center">
@@ -1035,7 +1057,7 @@ export default function ReviewWriteFlow({
                         commitMaterialDraftReview();
                       }
                     }}
-                    className="min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium whitespace-pre-wrap break-words text-[#1c1c1c] outline-none focus:border-ongil-teal focus:outline focus:outline-1 focus:outline-ongil-teal"
+                    className="focus:border-ongil-teal focus:outline-ongil-teal min-h-[56px] w-full resize-none overflow-hidden rounded-md border border-[#d1d1d1] bg-transparent px-4 py-4 text-lg leading-[1.35] font-medium break-words whitespace-pre-wrap text-[#1c1c1c] outline-none focus:outline focus:outline-1"
                     value={materialDraftReview}
                     onChange={(e) => setMaterialDraftReview(e.target.value)}
                   />
@@ -1097,7 +1119,8 @@ export default function ReviewWriteFlow({
             <label
               htmlFor="review-image-upload-input"
               className={`flex h-36 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-[#999] bg-[#f2f2f2] ${
-                isImageUploading || uploadedImageUrls.length >= MAX_REVIEW_IMAGE_COUNT
+                isImageUploading ||
+                uploadedImageUrls.length >= MAX_REVIEW_IMAGE_COUNT
                   ? 'cursor-not-allowed opacity-60'
                   : ''
               }`}
