@@ -216,14 +216,19 @@ export function ProductFilterBar({
                 key={option.value}
                 type="button"
                 onClick={() => setTempSizes((prev) => toggleValue(prev, option.value))}
-                className={`rounded-xl border px-4 py-3 text-center text-base font-semibold transition-colors ${
+                className={`rounded-xl border px-4 py-3 text-center transition-colors ${
                   isSelected
                     ? 'border-ongil-teal bg-ongil-mint text-black'
                     : 'border-gray-300 bg-white text-gray-900'
                 }`}
                 title={option.description}
               >
-                {option.label}
+                <div className="flex flex-col items-center leading-tight">
+                  <span className="text-lg font-semibold">{option.label}</span>
+                  <span className="mt-1 text-sm font-medium text-gray-500">
+                    ({option.description})
+                  </span>
+                </div>
               </button>
             );
           })}
