@@ -21,6 +21,7 @@ interface WrittenReviewApiItem {
   purchaseOption?: string;
   rating?: number;
   helpfulCount?: number;
+  createdAt?: string;
   product?: {
     productId?: number;
     productName?: string;
@@ -35,6 +36,17 @@ interface WrittenReviewApiItem {
     reviewCount?: number;
     reviewRating?: number;
   };
+}
+
+function resolveCreatedAtTimestamp(
+  item: ProductWithReviewStats | WrittenReviewApiItem,
+): number {
+  if ('createdAt' in item && typeof item.createdAt === 'string') {
+    const timestamp = Date.parse(item.createdAt);
+    return Number.isNaN(timestamp) ? 0 : timestamp;
+  }
+
+  return 0;
 }
 
 function normalizeWrittenReviewItem(
@@ -117,7 +129,11 @@ export default async function ReviewManagementContainer() {
   const writtenReviews = Array.isArray(writtenResponse)
     ? []
     : Array.isArray(writtenResponse.content)
-      ? writtenResponse.content
+      ? [...writtenResponse.content]
+          .sort(
+            (a, b) =>
+              resolveCreatedAtTimestamp(b) - resolveCreatedAtTimestamp(a),
+          )
           .map(normalizeWrittenReviewItem)
           .filter((item): item is ProductWithReviewStats => item !== null)
       : [];
