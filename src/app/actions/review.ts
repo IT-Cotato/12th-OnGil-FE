@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { auth } from '/auth';
 
@@ -297,6 +298,9 @@ export async function uploadReviewImagesAction(
 export async function submitReviewAction(
   reviewId: number,
   payload: ReviewSubmitRequest,
+  options?: {
+    productId?: number;
+  },
 ): Promise<ActionResult> {
   try {
     console.log('[review-submit] request', {
@@ -309,6 +313,12 @@ export async function submitReviewAction(
       `/reviews/${reviewId}/submit`,
       payload,
     );
+
+    revalidatePath('/reviews');
+
+    if (typeof options?.productId === 'number' && options.productId > 0) {
+      revalidatePath(`/product/${options.productId}`);
+    }
 
     console.log('[review-submit] success', { reviewId });
     return { success: true };

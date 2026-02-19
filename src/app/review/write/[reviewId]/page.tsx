@@ -61,6 +61,7 @@ export default async function ReviewWritePage({ params }: ReviewWritePageProps) 
 
       <ReviewWriteFlow
         reviewId={numericReviewId}
+        productId={reviewDetail.product.productId}
         clothingCategory={clothingCategory}
         productThumbnailImageUrl={reviewDetail.product.thumbnailImageUrl}
         productName={reviewDetail.product.productName}

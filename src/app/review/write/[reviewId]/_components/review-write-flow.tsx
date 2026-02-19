@@ -18,6 +18,7 @@ type FlowStep = 1 | 2;
 
 interface ReviewWriteFlowProps {
   reviewId: number;
+  productId: number;
   clothingCategory: string;
   productThumbnailImageUrl: string;
   productName: string;
@@ -75,6 +76,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5] as const;
 
 export default function ReviewWriteFlow({
   reviewId,
+  productId,
   clothingCategory,
   productThumbnailImageUrl,
   productName,
@@ -376,14 +378,20 @@ export default function ReviewWriteFlow({
         }
       }
 
-      const result = await submitReviewAction(reviewId, {
-        textReview,
-        reviewImageUrls,
-        sizeReview: sizeReviewItems.map((item) => item.trim()).filter(Boolean),
-        materialReview: materialReviewItems
-          .map((item) => item.trim())
-          .filter(Boolean),
-      });
+      const result = await submitReviewAction(
+        reviewId,
+        {
+          textReview,
+          reviewImageUrls,
+          sizeReview: sizeReviewItems.map((item) => item.trim()).filter(Boolean),
+          materialReview: materialReviewItems
+            .map((item) => item.trim())
+            .filter(Boolean),
+        },
+        {
+          productId,
+        },
+      );
 
       if (!result.success) {
         setErrorMessage(result.message || '리뷰 제출에 실패했습니다.');
