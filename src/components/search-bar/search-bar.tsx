@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
 import { VoiceOverlay } from './voice-overlay';
 import { useRecentSearches } from './use-recent-searches';
@@ -20,6 +20,7 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { history, addSearch, removeSearch, clearHistory, refreshHistory } =
     useRecentSearches();
@@ -36,17 +37,29 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
     onFocusChange?.(focused);
   };
 
+  const navigateToSearch = (keyword: string, isVoiceSearch = false) => {
+    const searchTypeQuery = isVoiceSearch ? '&searchType=VOICE' : '';
+    const searchUrl = `/search?q=${encodeURIComponent(keyword)}${searchTypeQuery}`;
+    router.push(searchUrl);
+    router.refresh(); // Force refresh to trigger server component re-render
+  };
+
   const handleSearch = (text: string) => {
     const keyword = text.trim();
     if (!keyword) return;
     inputRef.current?.blur();
     updateFocus(false);
     addSearch(keyword);
+    navigateToSearch(keyword, false);
+  };
 
-    // Navigate to search results page
-    const searchUrl = `/search?q=${encodeURIComponent(keyword)}`;
-    router.push(searchUrl);
-    router.refresh(); // Force refresh to trigger server component re-render
+  const handleVoiceSearchResult = (text: string) => {
+    const keyword = text.trim();
+    if (!keyword) return;
+    inputRef.current?.blur();
+    updateFocus(false);
+    // Voice input should be stored after keyword extraction in search results page.
+    navigateToSearch(keyword, true);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,12 +75,17 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
     updateFocus(false);
   };
 
+  useEffect(() => {
+    const nextQuery = searchParams.get('q') ?? '';
+    setQuery(nextQuery);
+  }, [searchParams]);
+
   return (
     <div className="relative z-110 flex-1">
       {isVoiceActive && (
         <VoiceOverlay
           onClose={() => setIsVoiceActive(false)}
-          onFinalResult={(text) => handleSearch(text)}
+          onFinalResult={handleVoiceSearchResult}
         />
       )}
 

@@ -104,12 +104,26 @@ export default async function ProductListContainer({
   }));
 
   const totalElements = result.products.totalElements;
+  const detailFromParams = new URLSearchParams();
+  detailFromParams.set('sortType', safeSortType);
+  detailFromParams.set('page', String(safePage));
+  safeClothingSizes.forEach((size) =>
+    detailFromParams.append('clothingSizes', size),
+  );
+  safeBrandIds.forEach((brandId) => detailFromParams.append('brandIds', brandId));
+  if (safePriceRange) {
+    detailFromParams.set('priceRange', safePriceRange);
+  }
+  const detailFromQuery = detailFromParams.toString();
+  const productDetailFrom = detailFromQuery
+    ? `/category/${parentId}/${subCategoryId}?${detailFromQuery}`
+    : `/category/${parentId}/${subCategoryId}`;
 
   return (
     <ProductList
       products={productsWithWishlist}
       totalElements={totalElements}
-      productDetailFrom={`/category/${parentId}/${subCategoryId}`}
+      productDetailFrom={productDetailFrom}
       showWishlistButton
     />
   );

@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductList from '@/components/product/product-list';
+import { ProductFilterBar, type BrandFilterOption } from '@/components/product/product-filter-bar';
 
 import { VoiceSearchResponse } from '@/types/domain/product';
 import { useRecentSearches } from '@/components/search-bar/use-recent-searches';
@@ -30,6 +31,29 @@ export function SearchResults({ data, query }: SearchResultsProps) {
     data.extractedKeyword,
     query,
   );
+  const availableBrands = useMemo(() => {
+    const products = data.searchResult.products.content as Array<{
+      brandId?: number;
+      brandName: string;
+    }>;
+
+    return Array.from(
+      new Map(
+        products
+          .map((product) => {
+            const id = Number(product.brandId);
+            const name = product.brandName.trim();
+            if (!Number.isFinite(id) || id <= 0 || name.length === 0) return null;
+            return [String(id), { id, name }] as const;
+          })
+          .filter(
+            (
+              item,
+            ): item is readonly [string, BrandFilterOption] => item !== null,
+          ),
+      ).values(),
+    ).sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+  }, [data.searchResult.products.content]);
 
   // Save the extracted keyword to recent searches
   useEffect(() => {
@@ -110,6 +134,8 @@ export function SearchResults({ data, query }: SearchResultsProps) {
           <p className="mt-2 text-sm text-gray-500">원래 검색어: {query}</p>
         )}
       </div>
+
+      <ProductFilterBar parentCategoryName="" availableBrands={availableBrands} />
 
       {/* Search results */}
       {hasResult && products.length > 0 ? (

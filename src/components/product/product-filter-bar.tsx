@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { X } from 'lucide-react';
 import { ProductSortType } from '@/types/enums';
 
 type FilterTab = 'size' | 'brand' | 'price';
@@ -15,12 +16,6 @@ export interface BrandFilterOption {
 interface ProductFilterBarProps {
   parentCategoryName: string;
   availableBrands: BrandFilterOption[];
-}
-
-interface ChipItem {
-  key: 'clothingSizes' | 'priceRange' | 'brandIds';
-  value: string;
-  label: string;
 }
 
 const SORT_OPTIONS: { value: ProductSortType; label: string }[] = [
@@ -63,16 +58,6 @@ function toggleValue(items: string[], value: string) {
 function setRepeatedQuery(params: URLSearchParams, key: string, values: string[]) {
   params.delete(key);
   values.forEach((value) => params.append(key, value));
-}
-
-function removeOneMultiFilterValue(
-  params: URLSearchParams,
-  key: 'clothingSizes' | 'brandIds',
-  value: string,
-) {
-  const nextValues = params.getAll(key).filter((item) => item !== value);
-  params.delete(key);
-  nextValues.forEach((item) => params.append(key, item));
 }
 
 function normalizeNumberInput(value: string) {
@@ -152,28 +137,9 @@ export function ProductFilterBar({
 
   const currentSortLabel =
     SORT_OPTIONS.find((option) => option.value === currentSort)?.label || '인기순';
-
-  const appliedChips: ChipItem[] = [
-    ...selectedSizes.map((value) => ({
-      key: 'clothingSizes' as const,
-      value,
-      label: value,
-    })),
-    ...(selectedPriceRange
-      ? [
-          {
-            key: 'priceRange' as const,
-            value: selectedPriceRange,
-            label: getPriceRangeLabel(selectedPriceRange),
-          },
-        ]
-      : []),
-    ...selectedBrandIds.map((value) => ({
-      key: 'brandIds' as const,
-      value,
-      label: getBrandLabelById(value, mergedBrandOptions, selectedBrandIds),
-    })),
-  ];
+  const hasSizeFilter = selectedSizes.length > 0;
+  const hasBrandFilter = selectedBrandIds.length > 0;
+  const hasPriceFilter = Boolean(selectedPriceRange);
 
   const tempChips = [
     ...tempSizes.map((value) => ({
@@ -239,17 +205,6 @@ export function ProductFilterBar({
     setOpenSheet(null);
   };
 
-  const handleRemoveChip = (chip: ChipItem) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (chip.key === 'priceRange') {
-      params.delete('priceRange');
-      navigateWithParams(params);
-      return;
-    }
-    removeOneMultiFilterValue(params, chip.key, chip.value);
-    navigateWithParams(params);
-  };
-
   const renderFilterContent = () => {
     if (activeFilterTab === 'size') {
       return (
@@ -261,14 +216,19 @@ export function ProductFilterBar({
                 key={option.value}
                 type="button"
                 onClick={() => setTempSizes((prev) => toggleValue(prev, option.value))}
-                className={`rounded-xl border px-4 py-3 text-center text-base font-semibold transition-colors ${
+                className={`rounded-xl border px-4 py-3 text-center transition-colors ${
                   isSelected
                     ? 'border-ongil-teal bg-ongil-mint text-black'
                     : 'border-gray-300 bg-white text-gray-900'
                 }`}
                 title={option.description}
               >
-                {option.label}
+                <div className="flex flex-col items-center leading-tight">
+                  <span className="text-lg font-semibold">{option.label}</span>
+                  <span className="mt-1 text-[18px] font-semibold text-gray-500">
+                    ({option.description})
+                  </span>
+                </div>
               </button>
             );
           })}
@@ -421,7 +381,7 @@ export function ProductFilterBar({
 
   return (
     <>
-      <div className="mb-3 overflow-x-auto pb-1">
+      <div className="mt-5 mb-3 overflow-x-auto pb-1">
         <div className="flex w-max items-center gap-2">
           <button
             type="button"
@@ -442,7 +402,9 @@ export function ProductFilterBar({
           <button
             type="button"
             onClick={() => openFilterSheet('size')}
-            className="border-ongil-teal text-ongil-teal h-10 rounded-full border bg-white px-4 text-base font-semibold"
+            className={`border-ongil-teal text-ongil-teal h-10 rounded-full border px-4 text-base font-semibold ${
+              hasSizeFilter ? 'bg-ongil-mint' : 'bg-white'
+            }`}
           >
             사이즈{selectedSizes.length > 0 ? selectedSizes.length : ''}
           </button>
@@ -450,7 +412,9 @@ export function ProductFilterBar({
           <button
             type="button"
             onClick={() => openFilterSheet('brand')}
-            className="border-ongil-teal text-ongil-teal h-10 rounded-full border bg-white px-4 text-base font-semibold"
+            className={`border-ongil-teal text-ongil-teal h-10 rounded-full border px-4 text-base font-semibold ${
+              hasBrandFilter ? 'bg-ongil-mint' : 'bg-white'
+            }`}
           >
             브랜드{selectedBrandIds.length > 0 ? selectedBrandIds.length : ''}
           </button>
@@ -458,36 +422,22 @@ export function ProductFilterBar({
           <button
             type="button"
             onClick={() => openFilterSheet('price')}
-            className="border-ongil-teal text-ongil-teal h-10 rounded-full border bg-white px-4 text-base font-semibold"
+            className={`border-ongil-teal text-ongil-teal h-10 rounded-full border px-4 text-base font-semibold ${
+              hasPriceFilter ? 'bg-ongil-mint' : 'bg-white'
+            }`}
           >
             가격{selectedPriceRange ? '1' : ''}
           </button>
         </div>
       </div>
 
-      {appliedChips.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-2">
-          {appliedChips.map((chip) => (
-            <button
-              key={`${chip.key}-${chip.value}`}
-              type="button"
-              onClick={() => handleRemoveChip(chip)}
-              className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 text-sm font-medium"
-            >
-              {chip.label}
-              <span className="text-xs">x</span>
-            </button>
-          ))}
-        </div>
-      )}
-
       {openSheet === 'sort' && (
         <>
           <div
-            className="fixed inset-0 z-50 bg-black/10"
+            className="fixed inset-0 z-[70] bg-black/10"
             onClick={() => setOpenSheet(null)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 rounded-t-[22px] bg-white px-6 pt-6 pb-10 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
+          <div className="fixed inset-x-0 bottom-0 z-[71] rounded-t-[22px] bg-white px-6 pt-6 pb-10 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
             <div className="mx-auto w-full max-w-7xl">
               <div className="relative mb-8 flex items-center justify-center">
                 <h3 className="text-2xl font-bold text-black">정렬</h3>
@@ -554,10 +504,10 @@ export function ProductFilterBar({
       {openSheet === 'filters' && (
         <>
           <div
-            className="fixed inset-0 z-50 bg-black/10"
+            className="fixed inset-0 z-[70] bg-black/10"
             onClick={() => setOpenSheet(null)}
           />
-          <div className="fixed inset-x-0 bottom-0 z-50 rounded-t-[22px] bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
+          <div className="fixed inset-x-0 bottom-0 z-[71] rounded-t-[22px] bg-white shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
             <div className="mx-auto w-full max-w-7xl">
               <div className="relative flex items-center justify-end px-4 pt-4 pb-2">
                 <button
@@ -608,7 +558,7 @@ export function ProductFilterBar({
               <div className="min-h-[290px] px-4 pt-4 pb-5">{renderFilterContent()}</div>
 
               <div className="border-t border-gray-200 px-4 pt-3 pb-4">
-                <div className="mb-3 flex min-h-11 flex-wrap gap-2">
+                <div className="mb-3 flex min-h-11 flex-wrap items-center gap-2">
                   {tempChips.map((chip) => (
                     <button
                       key={`temp-${chip.key}-${chip.value}`}
@@ -628,10 +578,12 @@ export function ProductFilterBar({
                           prev.filter((item) => item !== chip.value),
                         );
                       }}
-                      className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal inline-flex items-center gap-2 rounded-xl border px-3 py-1 text-sm font-medium"
+                      className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal relative inline-flex items-center justify-center rounded-xl border px-10 py-2 text-[20px] font-medium"
                     >
-                      {chip.label}
-                      <span className="text-xs">x</span>
+                      <span className="text-center leading-none">{chip.label}</span>
+                      <span className="absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-ongil-teal bg-white">
+                        <X className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+                      </span>
                     </button>
                   ))}
                 </div>

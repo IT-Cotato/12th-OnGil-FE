@@ -36,7 +36,7 @@ export async function getSubCategories(
 
 /** 추천 하위 카테고리 조회 */
 export async function getRecommendedSubCategories(
-  count = 8,
+  count = 4,
 ): Promise<CategorySimple[]> {
   try {
     return await api.get<CategorySimple[]>('/categories/recommended-sub', {
