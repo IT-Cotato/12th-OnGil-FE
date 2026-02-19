@@ -28,6 +28,10 @@ export default function RecommendedBrandClient({
 
   return (
     <div className="flex w-full flex-col p-5">
+      <h2 className="font-pretendard py-3 text-center text-2xl font-bold">
+        추천 브랜드
+      </h2>
+
       <RecommendedBrandHeader
         brands={brands}
         onClick={setSelectedIndex}
