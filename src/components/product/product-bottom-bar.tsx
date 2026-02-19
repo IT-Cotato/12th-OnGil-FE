@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ViewCountToast } from '../ui/view-count-toast';
 import ProductOptionSheet from '@/components/product-option-sheet/product-option-sheet';
 import { ProductOption } from '@/types/domain/product';
 import { useWishlist } from '@/hooks/use-wishlist';
@@ -57,10 +56,6 @@ export default function ProductBottomBar({
   return (
     <>
       <div className="font-pretendard pb-safe-bottom fixed right-0 bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-[#c3c3c3] bg-white py-2 text-sm font-medium shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div className="pointer-events-none absolute right-0 bottom-full left-0 flex justify-center pb-2">
-          <ViewCountToast />
-        </div>
-
         <Button
           variant="ghost"
           onClick={toggle}
