@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
 import { VoiceOverlay } from './voice-overlay';
 import { useRecentSearches } from './use-recent-searches';
@@ -20,6 +20,7 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { history, addSearch, removeSearch, clearHistory, refreshHistory } =
     useRecentSearches();
@@ -73,6 +74,11 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
     setIsVoiceActive(true);
     updateFocus(false);
   };
+
+  useEffect(() => {
+    const nextQuery = searchParams.get('q') ?? '';
+    setQuery(nextQuery);
+  }, [searchParams]);
 
   return (
     <div className="relative z-110 flex-1">
