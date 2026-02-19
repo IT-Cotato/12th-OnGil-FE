@@ -6,7 +6,32 @@ import { getMyWishlist } from '@/app/actions/wishlist';
 
 interface ProductListContainerProps {
   params: Promise<{ parentId: string; id: string }>;
-  searchParams: Promise<{ sortType?: string; page?: string }>;
+  searchParams: Promise<{
+    sortType?: string;
+    page?: string;
+    clothingSizes?: string | string[];
+    priceRange?: string | string[];
+    brandIds?: string | string[];
+  }>;
+}
+
+const PRICE_RANGE_PATTERN = /^\d+-\d+$/;
+
+function normalizeArray(value?: string | string[]) {
+  if (Array.isArray(value)) {
+    return value.filter((item) => item.trim().length > 0);
+  }
+  if (typeof value === 'string' && value.trim().length > 0) {
+    return [value];
+  }
+  return [];
+}
+
+function normalizePriceRange(value?: string | string[]) {
+  if (Array.isArray(value)) {
+    return value[0] ?? '';
+  }
+  return value ?? '';
 }
 
 export default async function ProductListContainer({
@@ -14,7 +39,13 @@ export default async function ProductListContainer({
   searchParams,
 }: ProductListContainerProps) {
   const { parentId, id: subCategoryId } = await params;
-  const { sortType = ProductSortType.POPULAR, page = '0' } = await searchParams;
+  const {
+    sortType = ProductSortType.POPULAR,
+    page = '0',
+    clothingSizes,
+    priceRange,
+    brandIds,
+  } = await searchParams;
 
   // 쿼리 파라미터 검증
   const validSortTypes = Object.values(ProductSortType);
@@ -24,6 +55,17 @@ export default async function ProductListContainer({
 
   const safePage =
     Number.isFinite(Number(page)) && Number(page) >= 0 ? Number(page) : 0;
+  const safeClothingSizes = normalizeArray(clothingSizes).filter((size) =>
+    ['XS', 'S', 'M', 'L', 'XL'].includes(size),
+  );
+  const safeBrandIds = normalizeArray(brandIds).filter((value) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed > 0;
+  });
+  const rawPriceRange = normalizePriceRange(priceRange);
+  const safePriceRange = PRICE_RANGE_PATTERN.test(rawPriceRange)
+    ? rawPriceRange
+    : '';
 
   // subCategoryId 유효성 검증
   const parsedCategoryId = Number(subCategoryId);
@@ -43,6 +85,10 @@ export default async function ProductListContainer({
         sortType: safeSortType,
         page: safePage,
         size: 36,
+        clothingSizes:
+          safeClothingSizes.length > 0 ? safeClothingSizes : undefined,
+        priceRange: safePriceRange || undefined,
+        brandIds: safeBrandIds.length > 0 ? safeBrandIds : undefined,
       },
     }),
     getMyWishlist(),
