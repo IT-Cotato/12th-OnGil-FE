@@ -8,12 +8,14 @@ import AddressItem from './address-item';
 interface AddressListProps {
   addresses: AddressItemType[];
   showSelectButton?: boolean;
+  showDeleteButton?: boolean;
   initialSelectedAddressId?: number | null;
 }
 
 export default function AddressList({
   addresses,
   showSelectButton = true,
+  showDeleteButton = false,
   initialSelectedAddressId,
 }: AddressListProps) {
   const router = useRouter();
@@ -43,6 +45,7 @@ export default function AddressList({
           isSelected={selectedAddressId === addr.addressId}
           onSelect={handleSelect}
           showSelectButton={showSelectButton}
+          showDeleteButton={showDeleteButton}
         />
       ))}
     </div>

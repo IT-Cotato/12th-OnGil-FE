@@ -79,6 +79,7 @@ export default async function AddressListPage({
             <AddressList
               addresses={resolvedAddresses}
               showSelectButton={!isManageMode}
+              showDeleteButton={isManageMode}
               initialSelectedAddressId={initialSelectedAddressId}
             />
           </Suspense>
