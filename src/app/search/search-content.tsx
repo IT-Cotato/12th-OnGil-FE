@@ -1,10 +1,11 @@
 import { api } from '@/lib/api-client';
-import { VoiceSearchResponse } from '@/types/domain/product';
+import { ProductSearchResult, VoiceSearchResponse } from '@/types/domain/product';
 import { ProductSortType } from '@/types/enums';
 import { SearchResults } from './search-results';
 import { SearchError } from './search-error';
 
 interface SearchFilterParams {
+  searchType?: string;
   sortType?: string;
   page?: string;
   clothingSizes?: string | string[];
@@ -93,6 +94,60 @@ async function fetchVoiceSearchResults(
   );
 }
 
+async function fetchProductSearchResults(
+  query: string,
+  filters: SearchFilterParams,
+): Promise<VoiceSearchResponse> {
+  const {
+    safeSortType,
+    safePage,
+    safeClothingSizes,
+    safeBrandIds,
+    safePriceRange,
+  } = normalizeFilters(filters);
+
+  const searchResult = await api.get<ProductSearchResult>('/products', {
+    params: {
+      query,
+      sortType: safeSortType,
+      page: safePage,
+      size: 20,
+      clothingSizes:
+        safeClothingSizes.length > 0 ? safeClothingSizes : undefined,
+      priceRange: safePriceRange || undefined,
+      brandIds: safeBrandIds.length > 0 ? safeBrandIds : undefined,
+    },
+    cache: 'no-store',
+  });
+
+  return {
+    extractedKeyword: query,
+    searchResult,
+  };
+}
+
+function shouldUseVoiceEndpoint(filters: SearchFilterParams) {
+  if (filters.searchType !== 'VOICE') {
+    return false;
+  }
+
+  const {
+    safeSortType,
+    safePage,
+    safeClothingSizes,
+    safeBrandIds,
+    safePriceRange,
+  } = normalizeFilters(filters);
+
+  return (
+    safeSortType === ProductSortType.POPULAR &&
+    safePage === '0' &&
+    safeClothingSizes.length === 0 &&
+    safeBrandIds.length === 0 &&
+    safePriceRange.length === 0
+  );
+}
+
 interface SearchContentProps {
   query: string;
   searchParams: SearchFilterParams;
@@ -103,7 +158,9 @@ export async function SearchContent({ query, searchParams }: SearchContentProps)
   let error: Error | null = null;
 
   try {
-    data = await fetchVoiceSearchResults(query, searchParams);
+    data = shouldUseVoiceEndpoint(searchParams)
+      ? await fetchVoiceSearchResults(query, searchParams)
+      : await fetchProductSearchResults(query, searchParams);
   } catch (err) {
     error = err as Error;
   }

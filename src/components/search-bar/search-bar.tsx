@@ -36,8 +36,9 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
     onFocusChange?.(focused);
   };
 
-  const navigateToSearch = (keyword: string) => {
-    const searchUrl = `/search?q=${encodeURIComponent(keyword)}`;
+  const navigateToSearch = (keyword: string, isVoiceSearch = false) => {
+    const searchTypeQuery = isVoiceSearch ? '&searchType=VOICE' : '';
+    const searchUrl = `/search?q=${encodeURIComponent(keyword)}${searchTypeQuery}`;
     router.push(searchUrl);
     router.refresh(); // Force refresh to trigger server component re-render
   };
@@ -48,7 +49,7 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
     inputRef.current?.blur();
     updateFocus(false);
     addSearch(keyword);
-    navigateToSearch(keyword);
+    navigateToSearch(keyword, false);
   };
 
   const handleVoiceSearchResult = (text: string) => {
@@ -57,7 +58,7 @@ export default function SearchBar({ onFocusChange }: SearchBarProps) {
     inputRef.current?.blur();
     updateFocus(false);
     // Voice input should be stored after keyword extraction in search results page.
-    navigateToSearch(keyword);
+    navigateToSearch(keyword, true);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

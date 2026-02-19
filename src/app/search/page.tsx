@@ -12,6 +12,7 @@ export const revalidate = 0;
 interface SearchPageProps {
   searchParams: Promise<{
     q?: string;
+    searchType?: string;
     sortType?: string;
     page?: string;
     clothingSizes?: string | string[];
