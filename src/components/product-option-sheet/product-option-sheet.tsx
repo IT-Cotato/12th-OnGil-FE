@@ -65,7 +65,7 @@ export default function ProductOptionSheet({
         >
           <div className="scrollbar-hide flex-1 overflow-y-auto px-5 pb-6">
             <SheetHeader className="mb-6 space-y-1 text-left">
-              <SheetTitle className="line-clamp-1 text-lg font-bold">
+              <SheetTitle className="line-clamp-1 text-2xl font-bold">
                 {productName}
               </SheetTitle>
             </SheetHeader>
