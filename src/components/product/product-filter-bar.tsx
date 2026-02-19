@@ -55,7 +55,11 @@ function toggleValue(items: string[], value: string) {
     : [...items, value];
 }
 
-function setRepeatedQuery(params: URLSearchParams, key: string, values: string[]) {
+function setRepeatedQuery(
+  params: URLSearchParams,
+  key: string,
+  values: string[],
+) {
   params.delete(key);
   values.forEach((value) => params.append(key, value));
 }
@@ -138,7 +142,8 @@ export function ProductFilterBar({
   }, [mergedBrandOptions, brandKeyword]);
 
   const currentSortLabel =
-    SORT_OPTIONS.find((option) => option.value === currentSort)?.label || '인기순';
+    SORT_OPTIONS.find((option) => option.value === currentSort)?.label ||
+    '인기순';
   const hasSizeFilter = selectedSizes.length > 0;
   const hasBrandFilter = validSelectedBrandIds.length > 0;
   const hasPriceFilter = Boolean(selectedPriceRange);
@@ -217,7 +222,9 @@ export function ProductFilterBar({
               <button
                 key={option.value}
                 type="button"
-                onClick={() => setTempSizes((prev) => toggleValue(prev, option.value))}
+                onClick={() =>
+                  setTempSizes((prev) => toggleValue(prev, option.value))
+                }
                 className={`rounded-xl border px-4 py-3 text-center transition-colors ${
                   isSelected
                     ? 'border-ongil-teal bg-ongil-mint text-black'
@@ -271,8 +278,10 @@ export function ProductFilterBar({
           </div>
 
           <div className="rounded-xl border border-gray-200 p-3">
-            <p className="mb-2 text-sm font-semibold text-gray-800">직접 입력</p>
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+            <p className="mb-2 text-sm font-semibold text-gray-800">
+              직접 입력
+            </p>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
               <input
                 value={customMinPrice}
                 onChange={(event) =>
@@ -280,7 +289,7 @@ export function ProductFilterBar({
                 }
                 inputMode="numeric"
                 placeholder="최소 금액"
-                className="h-10 rounded-lg border border-gray-300 px-3 text-sm outline-none"
+                className="h-10 w-full min-w-0 rounded-lg border border-gray-300 px-3 text-sm outline-none"
               />
               <span className="text-sm text-gray-500">-</span>
               <input
@@ -290,13 +299,15 @@ export function ProductFilterBar({
                 }
                 inputMode="numeric"
                 placeholder="최대 금액"
-                className="h-10 rounded-lg border border-gray-300 px-3 text-sm outline-none"
+                className="h-10 w-full min-w-0 rounded-lg border border-gray-300 px-3 text-sm outline-none"
               />
             </div>
             <button
               type="button"
               disabled={!canApplyCustomPrice}
-              onClick={() => setTempPriceRange(`${customMinPrice}-${customMaxPrice}`)}
+              onClick={() =>
+                setTempPriceRange(`${customMinPrice}-${customMaxPrice}`)
+              }
               className="bg-ongil-teal mt-3 h-9 rounded-lg px-4 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-gray-300"
             >
               직접입력 적용
@@ -308,7 +319,7 @@ export function ProductFilterBar({
 
     return (
       <div className="flex h-full min-h-0 flex-col gap-4">
-        <div className="flex h-12 items-center rounded-full border border-ongil-teal px-4">
+        <div className="border-ongil-teal flex h-12 items-center rounded-full border px-4">
           <svg
             className="mr-2 h-5 w-5 text-gray-400"
             fill="none"
@@ -370,7 +381,9 @@ export function ProductFilterBar({
                         />
                       </svg>
                     </span>
-                    <span className="text-base font-medium text-black">{brand.name}</span>
+                    <span className="text-base font-medium text-black">
+                      {brand.name}
+                    </span>
                   </button>
                 );
               })}
@@ -391,7 +404,12 @@ export function ProductFilterBar({
             className="border-ongil-teal text-ongil-teal flex h-10 items-center gap-1 rounded-full border bg-white px-4 text-base font-semibold"
           >
             {currentSortLabel}
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -418,7 +436,10 @@ export function ProductFilterBar({
               hasBrandFilter ? 'bg-ongil-mint' : 'bg-white'
             }`}
           >
-            브랜드{validSelectedBrandIds.length > 0 ? validSelectedBrandIds.length : ''}
+            브랜드
+            {validSelectedBrandIds.length > 0
+              ? validSelectedBrandIds.length
+              : ''}
           </button>
 
           <button
@@ -494,7 +515,9 @@ export function ProductFilterBar({
                         />
                       </svg>
                     </span>
-                    <span className="text-2xl font-bold text-black">{option.label}</span>
+                    <span className="text-2xl font-bold text-black">
+                      {option.label}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -557,7 +580,9 @@ export function ProductFilterBar({
                 ))}
               </div>
 
-              <div className="min-h-[290px] px-4 pt-4 pb-5">{renderFilterContent()}</div>
+              <div className="min-h-[290px] px-4 pt-4 pb-5">
+                {renderFilterContent()}
+              </div>
 
               <div className="border-t border-gray-200 px-4 pt-3 pb-4">
                 <div className="mb-3 flex min-h-11 flex-wrap items-center gap-2">
@@ -567,7 +592,9 @@ export function ProductFilterBar({
                       type="button"
                       onClick={() => {
                         if (chip.key === 'clothingSizes') {
-                          setTempSizes((prev) => prev.filter((item) => item !== chip.value));
+                          setTempSizes((prev) =>
+                            prev.filter((item) => item !== chip.value),
+                          );
                           return;
                         }
                         if (chip.key === 'priceRange') {
@@ -582,9 +609,15 @@ export function ProductFilterBar({
                       }}
                       className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal relative inline-flex items-center justify-center rounded-xl border px-10 py-2 text-[20px] font-medium"
                     >
-                      <span className="text-center leading-none">{chip.label}</span>
-                      <span className="absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-ongil-teal bg-white">
-                        <X className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+                      <span className="text-center leading-none">
+                        {chip.label}
+                      </span>
+                      <span className="border-ongil-teal absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border bg-white">
+                        <X
+                          className="h-4 w-4"
+                          strokeWidth={2.5}
+                          aria-hidden="true"
+                        />
                       </span>
                     </button>
                   ))}
