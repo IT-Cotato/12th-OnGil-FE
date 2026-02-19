@@ -135,7 +135,9 @@ export function SearchResults({ data, query }: SearchResultsProps) {
         )}
       </div>
 
-      <ProductFilterBar parentCategoryName="" availableBrands={availableBrands} />
+      {products.length > 0 && (
+        <ProductFilterBar parentCategoryName="" availableBrands={availableBrands} />
+      )}
 
       {/* Search results */}
       {hasResult && products.length > 0 ? (
