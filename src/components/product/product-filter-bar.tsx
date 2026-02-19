@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { X } from 'lucide-react';
 import { ProductSortType } from '@/types/enums';
 
 type FilterTab = 'size' | 'brand' | 'price';
@@ -552,7 +553,7 @@ export function ProductFilterBar({
               <div className="min-h-[290px] px-4 pt-4 pb-5">{renderFilterContent()}</div>
 
               <div className="border-t border-gray-200 px-4 pt-3 pb-4">
-                <div className="mb-3 flex min-h-11 flex-wrap gap-2">
+                <div className="mb-3 flex min-h-11 flex-wrap items-center gap-2">
                   {tempChips.map((chip) => (
                     <button
                       key={`temp-${chip.key}-${chip.value}`}
@@ -572,10 +573,12 @@ export function ProductFilterBar({
                           prev.filter((item) => item !== chip.value),
                         );
                       }}
-                      className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal inline-flex items-center gap-2 rounded-xl border px-3 py-1 text-sm font-medium"
+                      className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal relative inline-flex items-center justify-center rounded-xl border px-10 py-2 text-[20px] font-medium"
                     >
-                      {chip.label}
-                      <span className="text-xs">x</span>
+                      <span className="text-center leading-none">{chip.label}</span>
+                      <span className="absolute top-1/2 right-3 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-ongil-teal bg-white">
+                        <X className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+                      </span>
                     </button>
                   ))}
                 </div>
