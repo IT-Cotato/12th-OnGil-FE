@@ -1,17 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
 export default function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [loginId, setLoginId] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
   const authError = searchParams.get('error');
   const handleSocialLogin = (provider: 'kakao' | 'google') => {
     setIsLoading(true);
@@ -21,7 +16,7 @@ export default function LoginForm() {
       const CLIENT_ID = process.env.NEXT_PUBLIC_AUTH_KAKAO_ID;
       if (!CLIENT_ID) {
         console.error('Missing NEXT_PUBLIC_AUTH_KAKAO_ID');
-        setError('카카오 로그인 설정이 누락되었습니다.');
+        alert('카카오 로그인 설정이 누락되었습니다.');
         setIsLoading(false);
         return;
       }
@@ -35,7 +30,7 @@ export default function LoginForm() {
       const CLIENT_ID = process.env.NEXT_PUBLIC_AUTH_GOOGLE_ID;
       if (!CLIENT_ID) {
         console.error('Missing NEXT_PUBLIC_AUTH_GOOGLE_ID');
-        setError('구글 로그인 설정이 누락되었습니다.');
+        alert('구글 로그인 설정이 누락되었습니다.');
         setIsLoading(false);
         return;
       }
@@ -51,51 +46,29 @@ export default function LoginForm() {
     window.location.href = authUrl;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const result = await signIn('credentials-login', {
-        loginId,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError('Invalid email or password.');
-      } else {
-        router.push('/'); // Success! Redirect to app
-        router.refresh(); // Refresh router to update session state
-      }
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg">
-        {/* Header */}
-        <div className="text-center">
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
-            Welcome back
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Please sign in to your account
+    <div
+      className="relative flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-12 sm:px-6 lg:px-8"
+      style={{ backgroundImage: "url('/background.png')" }}
+    >
+      <div className="absolute inset-0 bg-white/60" />
+
+      <div className="relative z-10 w-full max-w-md">
+        <div className="mb-10 flex flex-col items-center gap-4">
+          <Image src="/ongil.svg" alt="온길" width={180} height={54} priority />
+          <Image src="/gil.svg" alt="길" width={90} height={30} priority />
+          <p className="my-5 text-center text-[24px] font-semibold text-black">
+            온길과 함께 걷는 편안한 쇼핑길
           </p>
         </div>
 
-        {(error || authError) && (
-          <div className="rounded-md bg-red-50 p-4 text-center text-sm text-red-500">
-            {error || 'Authentication failed. Please try again.'}
+        {authError && (
+          <div className="mb-6 rounded-md bg-red-50 p-4 text-center text-sm text-red-500">
+            Authentication failed. Please try again.
           </div>
         )}
 
-        <div className="mt-8 space-y-4">
+        <div className="space-y-4">
           <button
             onClick={() => handleSocialLogin('kakao')}
             disabled={isLoading}
@@ -133,69 +106,6 @@ export default function LoginForm() {
             구글로 로그인
           </button>
         </div>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-2 text-gray-500">또는</span>
-          </div>
-        </div>
-
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label
-              htmlFor="loginId"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Id
-            </label>
-            <div className="mt-1">
-              <input
-                id="loginId"
-                name="loginId"
-                type="text"
-                autoComplete="loginId"
-                required
-                value={loginId}
-                onChange={(e) => setLoginId(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              비밀번호
-            </label>
-            <div className="mt-1">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:bg-indigo-400"
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   );
