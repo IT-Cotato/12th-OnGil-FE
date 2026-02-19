@@ -17,12 +17,6 @@ interface ProductFilterBarProps {
   availableBrands: BrandFilterOption[];
 }
 
-interface ChipItem {
-  key: 'clothingSizes' | 'priceRange' | 'brandIds';
-  value: string;
-  label: string;
-}
-
 const SORT_OPTIONS: { value: ProductSortType; label: string }[] = [
   { value: ProductSortType.POPULAR, label: '인기순' },
   { value: ProductSortType.REVIEW, label: '리뷰 많은순' },
@@ -63,16 +57,6 @@ function toggleValue(items: string[], value: string) {
 function setRepeatedQuery(params: URLSearchParams, key: string, values: string[]) {
   params.delete(key);
   values.forEach((value) => params.append(key, value));
-}
-
-function removeOneMultiFilterValue(
-  params: URLSearchParams,
-  key: 'clothingSizes' | 'brandIds',
-  value: string,
-) {
-  const nextValues = params.getAll(key).filter((item) => item !== value);
-  params.delete(key);
-  nextValues.forEach((item) => params.append(key, item));
 }
 
 function normalizeNumberInput(value: string) {
@@ -152,28 +136,9 @@ export function ProductFilterBar({
 
   const currentSortLabel =
     SORT_OPTIONS.find((option) => option.value === currentSort)?.label || '인기순';
-
-  const appliedChips: ChipItem[] = [
-    ...selectedSizes.map((value) => ({
-      key: 'clothingSizes' as const,
-      value,
-      label: value,
-    })),
-    ...(selectedPriceRange
-      ? [
-          {
-            key: 'priceRange' as const,
-            value: selectedPriceRange,
-            label: getPriceRangeLabel(selectedPriceRange),
-          },
-        ]
-      : []),
-    ...selectedBrandIds.map((value) => ({
-      key: 'brandIds' as const,
-      value,
-      label: getBrandLabelById(value, mergedBrandOptions, selectedBrandIds),
-    })),
-  ];
+  const hasSizeFilter = selectedSizes.length > 0;
+  const hasBrandFilter = selectedBrandIds.length > 0;
+  const hasPriceFilter = Boolean(selectedPriceRange);
 
   const tempChips = [
     ...tempSizes.map((value) => ({
@@ -237,17 +202,6 @@ export function ProductFilterBar({
     }
     navigateWithParams(params);
     setOpenSheet(null);
-  };
-
-  const handleRemoveChip = (chip: ChipItem) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (chip.key === 'priceRange') {
-      params.delete('priceRange');
-      navigateWithParams(params);
-      return;
-    }
-    removeOneMultiFilterValue(params, chip.key, chip.value);
-    navigateWithParams(params);
   };
 
   const renderFilterContent = () => {
@@ -421,7 +375,7 @@ export function ProductFilterBar({
 
   return (
     <>
-      <div className="mb-3 overflow-x-auto pb-1">
+      <div className="mt-5 mb-3 overflow-x-auto pb-1">
         <div className="flex w-max items-center gap-2">
           <button
             type="button"
@@ -442,7 +396,9 @@ export function ProductFilterBar({
           <button
             type="button"
             onClick={() => openFilterSheet('size')}
-            className="border-ongil-teal text-ongil-teal h-10 rounded-full border bg-white px-4 text-base font-semibold"
+            className={`border-ongil-teal text-ongil-teal h-10 rounded-full border px-4 text-base font-semibold ${
+              hasSizeFilter ? 'bg-ongil-mint' : 'bg-white'
+            }`}
           >
             사이즈{selectedSizes.length > 0 ? selectedSizes.length : ''}
           </button>
@@ -450,7 +406,9 @@ export function ProductFilterBar({
           <button
             type="button"
             onClick={() => openFilterSheet('brand')}
-            className="border-ongil-teal text-ongil-teal h-10 rounded-full border bg-white px-4 text-base font-semibold"
+            className={`border-ongil-teal text-ongil-teal h-10 rounded-full border px-4 text-base font-semibold ${
+              hasBrandFilter ? 'bg-ongil-mint' : 'bg-white'
+            }`}
           >
             브랜드{selectedBrandIds.length > 0 ? selectedBrandIds.length : ''}
           </button>
@@ -458,28 +416,14 @@ export function ProductFilterBar({
           <button
             type="button"
             onClick={() => openFilterSheet('price')}
-            className="border-ongil-teal text-ongil-teal h-10 rounded-full border bg-white px-4 text-base font-semibold"
+            className={`border-ongil-teal text-ongil-teal h-10 rounded-full border px-4 text-base font-semibold ${
+              hasPriceFilter ? 'bg-ongil-mint' : 'bg-white'
+            }`}
           >
             가격{selectedPriceRange ? '1' : ''}
           </button>
         </div>
       </div>
-
-      {appliedChips.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-2">
-          {appliedChips.map((chip) => (
-            <button
-              key={`${chip.key}-${chip.value}`}
-              type="button"
-              onClick={() => handleRemoveChip(chip)}
-              className="border-ongil-teal bg-ongil-mint/50 text-ongil-teal inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 text-sm font-medium"
-            >
-              {chip.label}
-              <span className="text-xs">x</span>
-            </button>
-          ))}
-        </div>
-      )}
 
       {openSheet === 'sort' && (
         <>
