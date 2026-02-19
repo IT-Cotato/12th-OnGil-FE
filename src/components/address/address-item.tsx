@@ -11,6 +11,7 @@ interface AddressItemProps {
   isSelected: boolean;
   onSelect: (addressId: number) => void;
   showSelectButton?: boolean;
+  showDeleteButton?: boolean;
 }
 
 function splitAddressByParen(address: string) {
@@ -30,6 +31,7 @@ export default function AddressItem({
   isSelected,
   onSelect,
   showSelectButton = true,
+  showDeleteButton = false,
 }: AddressItemProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -76,14 +78,16 @@ export default function AddressItem({
         >
           {item.isDefault ? '기본 배송지' : '일반 배송지'}
         </span>
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          aria-label={`${item.recipientName} 배송지 삭제`}
-          className="text-base text-gray-500 underline underline-offset-4 hover:text-red-500"
-        >
-          {isDeleting ? '삭제 중...' : '삭제'}
-        </button>
+        {showDeleteButton ? (
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            aria-label={`${item.recipientName} 배송지 삭제`}
+            className="text-2xl text-gray-500 underline underline-offset-4 hover:text-red-500"
+          >
+            {isDeleting ? '삭제 중...' : '삭제'}
+          </button>
+        ) : null}
       </div>
 
       <div className="space-y-5 px-2 text-xl">
