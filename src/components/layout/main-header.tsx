@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import SearchBar from '../search-bar/search-bar';
@@ -29,7 +29,9 @@ export default function MainHeader() {
         </button>
       )}
 
-      <SearchBar onFocusChange={setIsSearchFocused} />
+      <Suspense fallback={<div className="h-[45px] min-w-60.5 flex-1" />}>
+        <SearchBar onFocusChange={setIsSearchFocused} />
+      </Suspense>
 
       <div
         className={`flex items-center whitespace-nowrap ${

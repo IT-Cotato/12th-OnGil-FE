@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SearchBar from '@/components/search-bar/search-bar';
@@ -21,7 +22,9 @@ export default function CategoryParentHeaderBar() {
           </h1>
         </div>
         <div className="min-w-0">
-          <SearchBar />
+          <Suspense fallback={<div className="h-[45px]" />}>
+            <SearchBar />
+          </Suspense>
         </div>
       </div>
     </header>

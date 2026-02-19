@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import SearchBar from '@/components/search-bar/search-bar';
 
 export default function CategoryMainHeader() {
@@ -9,7 +10,9 @@ export default function CategoryMainHeader() {
         <h1 className="mb-10 text-center text-3xl font-bold text-black">
           카테고리
         </h1>
-        <SearchBar />
+        <Suspense fallback={<div className="h-[45px]" />}>
+          <SearchBar />
+        </Suspense>
       </div>
     </header>
   );
