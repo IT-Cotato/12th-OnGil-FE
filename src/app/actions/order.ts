@@ -112,12 +112,18 @@ export async function fetchDirectOrderItems(
   if (selections.length === 0) notFound();
 
   const product = await getProductDetail(productId);
+  const resolvedThumbnail =
+    typeof product.thumbnailImageUrl === 'string' &&
+    product.thumbnailImageUrl.trim().length > 0
+      ? product.thumbnailImageUrl
+      : (product.imageUrls?.find((url) => typeof url === 'string' && url.trim().length > 0) ??
+        '');
 
   return selections.map((sel) => ({
     productId: product.id,
     productName: product.name,
     brandName: product.brandName,
-    thumbnailImageUrl: product.thumbnailImageUrl,
+    thumbnailImageUrl: resolvedThumbnail,
     selectedSize: sel.size,
     selectedColor: sel.color,
     quantity: sel.quantity,
