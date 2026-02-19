@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '/auth';
 
 import { ApiError, api } from '@/lib/api-client';
+import { publicApi } from '@/lib/public-api-client';
 import { rethrowNextError } from '@/lib/server-action-utils';
 import type { ApiResponse } from '@/types/common';
 import type {
@@ -204,7 +205,9 @@ export async function generateSizeAiReviewAction(
   reviewId: number,
 ): Promise<ActionResult<AiGeneratedReviewsData>> {
   try {
-    const data = await api.get<AiGeneratedReviewsData>(`/reviews/${reviewId}/ai/size`);
+    const data = await api.get<AiGeneratedReviewsData>(
+      `/reviews/${reviewId}/ai/size`,
+    );
     return { success: true, data };
   } catch (error) {
     console.error('리뷰 사이즈 AI 생성 실패:', error);
@@ -231,7 +234,10 @@ export async function uploadReviewImagesAction(
 ): Promise<ActionResult<string[]>> {
   try {
     if (!BASE_URL) {
-      return { success: false, message: 'BACKEND_API_URL이 설정되지 않았습니다.' };
+      return {
+        success: false,
+        message: 'BACKEND_API_URL이 설정되지 않았습니다.',
+      };
     }
 
     const images = formData
@@ -242,7 +248,10 @@ export async function uploadReviewImagesAction(
       return { success: false, message: '업로드할 이미지가 없습니다.' };
     }
     if (images.length > 5) {
-      return { success: false, message: '이미지는 최대 5장까지 업로드할 수 있습니다.' };
+      return {
+        success: false,
+        message: '이미지는 최대 5장까지 업로드할 수 있습니다.',
+      };
     }
 
     const session = await auth();
@@ -383,7 +392,7 @@ export async function getProductReviewsSummaryAction(
   productId: number,
 ): Promise<ReviewStatsData> {
   try {
-    return await api.get<ReviewStatsData>(
+    return await publicApi.get<ReviewStatsData>(
       `/products/${productId}/reviews/summary`,
     );
   } catch (error) {
