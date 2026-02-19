@@ -13,11 +13,23 @@ export default function PaymentInfoSection({
   usedPoints,
   onPointsChange,
 }: Props) {
+  const maxUsablePoints = Math.min(userPoints, totalPrice);
+  const isUsingAllPoints = usedPoints > 0 && usedPoints === maxUsablePoints;
+  const remainingUsablePoints = Math.max(0, maxUsablePoints - usedPoints);
+
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = Number(e.target.value.replace(/[^0-9]/g, ''));
     if (val > userPoints) val = userPoints;
     if (val > totalPrice) val = totalPrice;
     onPointsChange(val);
+  };
+
+  const handleToggleAllPoints = () => {
+    if (isUsingAllPoints) {
+      onPointsChange(0);
+      return;
+    }
+    onPointsChange(maxUsablePoints);
   };
 
   return (
@@ -39,12 +51,21 @@ export default function PaymentInfoSection({
             inputMode="numeric"
           />
           <button
-            onClick={() => onPointsChange(Math.min(userPoints, totalPrice))}
+            onClick={handleToggleAllPoints}
             className="h-[87px] rounded-lg border border-black text-left text-2xl leading-normal font-medium"
           >
             <div className="flex flex-col justify-center px-4 py-1">
-              <span className="">모두</span>
-              <span className="">사용</span>
+              {isUsingAllPoints ? (
+                <>
+                  <span className="">사용</span>
+                  <span className="">안함</span>
+                </>
+              ) : (
+                <>
+                  <span className="">모두</span>
+                  <span className="">사용</span>
+                </>
+              )}
             </div>
           </button>
         </div>
@@ -52,8 +73,8 @@ export default function PaymentInfoSection({
 
       {/* 최종 금액 계산 */}
       <div className="flex gap-2 text-xl leading-normal font-medium">
-        <span>현재 보유한 적립금: </span>
-        <span>{userPoints.toLocaleString()}원</span>
+        <span>사용 가능 포인트: </span>
+        <span>{remainingUsablePoints.toLocaleString()}원</span>
       </div>
     </div>
   );
