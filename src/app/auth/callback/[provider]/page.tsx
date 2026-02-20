@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
+import LoadingIndicator from '@/components/ui/loading-indicator';
 
 export default function OAuthCallbackPage() {
   const params = useParams<{ provider: string }>();
@@ -33,15 +34,8 @@ export default function OAuthCallbackPage() {
   }, [searchParams, params, router]);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-xl font-bold">
-          Verifying {params.provider} Login...
-        </h2>
-        <p className="text-gray-500">
-          Please wait while we connect to the server.
-        </p>
-      </div>
+    <div className="flex h-screen w-full flex-col items-center justify-center px-4">
+      <LoadingIndicator />
     </div>
   );
 }
