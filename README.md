@@ -1,163 +1,99 @@
 # 온길 FE (12th-OnGil-FE)
 
+시니어 친화 쇼핑 경험을 목표로 하는 Next.js App Router 기반 프론트엔드 프로젝트입니다.  
+상품 탐색, 장바구니, 주문/결제, 리뷰, 마이페이지, 웹 푸시 알림까지 한 흐름으로 구성되어 있습니다.
+
 <p align="left">
   <a href="https://nextjs.org/">
-    <img src="https://img.shields.io/badge/Next.js-16.1.1-000000?logo=nextdotjs&logoColor=white" alt="Next.js 16" />
+    <img src="https://img.shields.io/badge/Next.js-16.1.1-000000?logo=nextdotjs&logoColor=white" alt="Next.js 16.1.1" />
   </a>
   <a href="https://react.dev/">
-    <img src="https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react&logoColor=000" alt="React 19" />
+    <img src="https://img.shields.io/badge/React-19.2.3-61DAFB?logo=react&logoColor=000000" alt="React 19.2.3" />
   </a>
   <a href="https://www.typescriptlang.org/">
-    <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" />
   </a>
   <a href="https://tailwindcss.com/">
     <img src="https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" />
   </a>
+  <a href="https://authjs.dev/">
+    <img src="https://img.shields.io/badge/NextAuth-v5_beta-000000?logo=auth0&logoColor=white" alt="NextAuth v5 beta" />
+  </a>
   <a href="https://pnpm.io/">
-    <img src="https://img.shields.io/badge/pnpm-workspace-F69220?logo=pnpm&logoColor=white" alt="pnpm" />
+    <img src="https://img.shields.io/badge/pnpm-Workspace-F69220?logo=pnpm&logoColor=white" alt="pnpm workspace" />
   </a>
 </p>
 
-<p align="left">
-  <a href="https://github.com/Seoje1405/12th-OnGil-FE/actions/workflows/ai-fix.yml">
-    <img src="https://github.com/Seoje1405/12th-OnGil-FE/actions/workflows/ai-fix.yml/badge.svg" alt="AI Auto Fixer" />
-  </a>
-  <a href="https://github.com/Seoje1405/12th-OnGil-FE/actions/workflows/ai-targeted-fix.yml">
-    <img src="https://github.com/Seoje1405/12th-OnGil-FE/actions/workflows/ai-targeted-fix.yml/badge.svg" alt="AI Targeted Fixer" />
-  </a>
-</p>
+## 목차
 
-시니어 사용성을 우선한 쇼핑 경험을 목표로, 상품 탐색부터 주문/리뷰/마이페이지까지 하나의 흐름으로 제공하는 Next.js 프론트엔드 프로젝트입니다.
+- [프로젝트 개요](#프로젝트-개요)
+- [주요 화면](#주요-화면)
+- [기술 스택](#기술-스택)
+- [빠른 시작](#빠른-시작)
+- [환경 변수](#환경-변수)
+- [스크립트](#스크립트)
+- [프로젝트 구조](#프로젝트-구조)
+- [라우트 맵](#라우트-맵)
+- [API Route Handlers](#api-route-handlers)
+- [서버 액션 구조](#서버-액션-구조)
+- [아키텍처 개요](#아키텍처-개요)
+- [인증 흐름](#인증-흐름)
+- [검색/알림/PWA 동작](#검색알림pwa-동작)
+- [개발 규칙](#개발-규칙)
+- [트러블슈팅](#트러블슈팅)
+- [현재 상태/제약](#현재-상태제약)
 
-## Table of Contents
+## 프로젝트 개요
 
-- [프로젝트 소개](#project-overview)
-- [주요 기능](#key-features)
-- [기술 스택](#tech-stack)
-- [빠른 시작](#quick-start)
-- [환경 변수](#environment-variables)
-- [프로젝트 구조](#project-structure)
-- [라우트 맵 (요약)](#route-map)
-- [데이터 흐름/아키텍처 개요](#architecture)
-- [협업 가이드](#collaboration-guide)
-- [문제 해결 (Troubleshooting)](#troubleshooting)
-- [라이선스/비고](#license)
-
-<a id="project-overview"></a>
-## 프로젝트 소개
-
-온길 FE는 시니어 친화 UI/UX를 중심으로 구성된 커머스 프론트엔드입니다.
-
-- 앱 목적: 접근성 높은 쇼핑 플로우 제공
-- 핵심 도메인: 상품 탐색, 장바구니, 주문/결제, 리뷰, 마이페이지
-- 기본 사용자 흐름:
+- 목적: 시니어 사용성을 고려한 커머스 프론트엔드 제공
+- 핵심 도메인: 카테고리/상품 탐색, 장바구니, 주문, 리뷰, 마이페이지
+- 사용자 흐름:
 
 ```text
-탐색/검색 -> 장바구니 -> 주문/결제 -> 리뷰/마이페이지
+홈/카테고리/검색 -> 상품 상세 -> 장바구니/바로구매 -> 결제 -> 주문/리뷰 -> 마이페이지
 ```
 
-<a id="key-features"></a>
-## 주요 기능
+## 주요 화면
 
-1. 인증
-- NextAuth v5 기반 인증 구성
-- 이메일/비밀번호 로그인
-- 카카오/구글 OAuth 로그인
+### 대표 화면
 
-2. 상품 탐색/검색
-- 카테고리/상품 상세 탐색
-- 검색 자동완성, 최근 검색어
-- Web Speech API 기반 음성 검색
+<p align="center">
+  <img width="420" alt="온길 대표 화면" src="https://github.com/user-attachments/assets/9b010b44-814a-4000-b23b-9d0be0ba8efa" />
+</p>
 
-3. 커머스
-- 장바구니 담기/수정/삭제/개수 동기화
-- 주문 생성(장바구니 주문, 바로 구매)
-- 주문 목록/상세/취소/삭제
-
-4. 리뷰
-- 단계형 리뷰 작성 플로우
-- 리뷰 목록/상세/요약 통계
-- "도움돼요" 토글
-
-5. 사용자 영역
-- 배송지 관리
-- 찜(위시리스트)
-- 프로필 이미지 관리
-- 체형 정보 입력/수정
-
-6. PWA/알림
-- 서비스 워커 등록(`public/sw.js`)
-- 웹 푸시 구독/해지/발송 테스트 액션
-
-<a id="tech-stack"></a>
 ## 기술 스택
 
-| 구분 | 사용 기술 | 비고 |
-| --- | --- | --- |
-| Framework | Next.js 16 (App Router) | 서버 컴포넌트/라우팅 |
-| Runtime | React 19, Node.js 20+ 권장 | 동시성/최신 API 기준 |
-| Language | TypeScript 5 | `strict` 모드 사용 |
-| Styling | Tailwind CSS v4, tw-animate-css | 유틸리티 기반 스타일링 |
-| State | Zustand | 장바구니 카운트 등 클라이언트 상태 |
-| Validation | Zod, React Hook Form | 입력 검증 및 폼 처리 |
-| Auth | NextAuth v5 (beta) | JWT 세션 + 토큰 갱신 |
-| UI/Utilities | Radix UI, date-fns, clsx, cva | 공용 UI/유틸 구성 |
-| Push | web-push, Service Worker | PWA 알림 테스트 |
+| 구분            | 내용                                         |
+| --------------- | -------------------------------------------- |
+| Framework       | Next.js 16.1.1 (App Router)                  |
+| UI Runtime      | React 19.2.3                                 |
+| Language        | TypeScript 5 (`strict: true`)                |
+| Styling         | Tailwind CSS v4 + tw-animate-css             |
+| Auth            | NextAuth v5 beta (`next-auth@5.0.0-beta.30`) |
+| Form/Validation | React Hook Form + Zod                        |
+| State           | Zustand                                      |
+| UI Base         | Radix UI                                     |
+| Utility         | clsx, class-variance-authority, date-fns     |
+| PWA/Push        | Service Worker, web-push                     |
 
-<a id="quick-start"></a>
 ## 빠른 시작
 
-### 1) 사전 요구사항
+### 1) 요구사항
 
-- Node.js `20+` 권장
-- `pnpm` 사용 권장 (lockfile: `pnpm-lock.yaml`)
+- Node.js 20+
+- pnpm
 
-### 2) 의존성 설치
+### 2) 설치
 
 ```bash
 pnpm install
 ```
 
-### 3) 개발 서버 실행
+### 3) 환경 변수 파일 생성
+
+루트에 `.env.local` 파일 생성 후 아래 값 설정:
 
 ```bash
-pnpm dev
-```
-
-### 4) 프로덕션 빌드/실행
-
-```bash
-pnpm build
-pnpm start
-```
-
-### 5) 린트
-
-```bash
-pnpm lint
-```
-
-### 6) 테스트 스크립트 현황
-
-현재 `package.json`에는 별도 테스트 스크립트가 정의되어 있지 않습니다.
-
-<a id="environment-variables"></a>
-## 환경 변수
-
-`.env.local` 파일을 기준으로 아래 키를 설정합니다.
-
-| 키 | 필수 | 설명 |
-| --- | --- | --- |
-| `BACKEND_API_URL` | Yes | 백엔드 API 기본 URL |
-| `AUTH_SECRET` | Yes | NextAuth 시크릿 |
-| `NEXT_PUBLIC_AUTH_KAKAO_ID` | Yes | 카카오 OAuth 클라이언트 ID |
-| `NEXT_PUBLIC_AUTH_GOOGLE_ID` | Yes | 구글 OAuth 클라이언트 ID |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Yes (푸시 사용 시) | 웹 푸시 공개 키 |
-| `VAPID_PRIVATE_KEY` | Yes (푸시 사용 시) | 웹 푸시 개인 키 |
-
-예시:
-
-```text
 BACKEND_API_URL=http://localhost:8080
 AUTH_SECRET=replace-with-strong-secret
 NEXT_PUBLIC_AUTH_KAKAO_ID=your-kakao-client-id
@@ -166,188 +102,266 @@ NEXT_PUBLIC_VAPID_PUBLIC_KEY=your-vapid-public-key
 VAPID_PRIVATE_KEY=your-vapid-private-key
 ```
 
-<a id="project-structure"></a>
+### 4) 개발 서버 실행
+
+```bash
+pnpm dev
+```
+
+브라우저: `http://localhost:3000`
+
+### 5) 빌드/실행/린트
+
+```bash
+pnpm build
+pnpm start
+pnpm lint
+```
+
+## 환경 변수
+
+| 키                             | 필수             | 사용 위치                                                             | 설명                   |
+| ------------------------------ | ---------------- | --------------------------------------------------------------------- | ---------------------- |
+| `BACKEND_API_URL`              | Yes              | `src/lib/api-client.ts`, `src/lib/public-api-client.ts`, `auth.ts` 등 | 백엔드 API 기본 URL    |
+| `AUTH_SECRET`                  | Yes              | `auth.ts`                                                             | NextAuth 시크릿        |
+| `NEXT_PUBLIC_AUTH_KAKAO_ID`    | Yes              | `src/components/login/login-form.tsx`                                 | 카카오 OAuth Client ID |
+| `NEXT_PUBLIC_AUTH_GOOGLE_ID`   | Yes              | `src/components/login/login-form.tsx`                                 | 구글 OAuth Client ID   |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Push 사용 시 Yes | `src/app/actions/push.ts`, `src/components/pwa/notification-test.tsx` | 웹 푸시 공개키         |
+| `VAPID_PRIVATE_KEY`            | Push 사용 시 Yes | `src/app/actions/push.ts`                                             | 웹 푸시 개인키         |
+
+## 스크립트
+
+`package.json` 기준:
+
+- `pnpm dev`: 개발 서버 실행
+- `pnpm build`: 프로덕션 빌드
+- `pnpm start`: 프로덕션 서버 실행
+- `pnpm lint`: ESLint 실행
+
 ## 프로젝트 구조
 
-핵심 폴더 기준 깊이 2 요약:
+### 루트 구조
 
 ```text
 .
-├─ public/
-│  ├─ icons/
-│  └─ sw.js
-├─ src/
-│  ├─ app/
-│  │  ├─ @modal/
-│  │  ├─ actions/
-│  │  ├─ api/
-│  │  ├─ address/
-│  │  ├─ auth/
-│  │  ├─ body-info/
-│  │  ├─ cart/
-│  │  ├─ category/
-│  │  ├─ login/
-│  │  ├─ me/
-│  │  ├─ orders/
-│  │  ├─ payment/
-│  │  ├─ product/
-│  │  ├─ review/
-│  │  ├─ reviews/
-│  │  └─ search/
-│  ├─ components/
-│  │  ├─ address/
-│  │  ├─ cart/
-│  │  ├─ layout/
-│  │  ├─ product/
-│  │  ├─ pwa/
-│  │  ├─ reviews/
-│  │  ├─ search-bar/
-│  │  └─ ui/
-│  ├─ config/
-│  ├─ hooks/
-│  ├─ lib/
-│  ├─ locales/
-│  ├─ schemas/
-│  ├─ store/
-│  └─ types/
-├─ auth.ts
-├─ auth.config.ts
-├─ next.config.ts
-└─ package.json
+├─ src/                         # 애플리케이션 소스
+├─ public/                      # 정적 리소스 및 SW
+├─ auth.ts                      # NextAuth 상세 설정 (providers/callbacks)
+├─ auth.config.ts               # 접근 제어 설정
+├─ proxy.ts                     # Next.js proxy 기반 보호 라우팅
+├─ next.config.ts               # Next.js 설정 (headers/reactCompiler/images)
+├─ tsconfig.json                # TypeScript 설정
+└─ package.json                 # 스크립트/의존성
 ```
 
-### `src/app/actions` 도메인 액션 구성
+### `src` 상세
 
-| 도메인 | 파일 | 역할 예시 |
-| --- | --- | --- |
-| 주소 | `src/app/actions/address.ts` | 배송지 조회/등록/수정/삭제 |
-| 장바구니 | `src/app/actions/cart.ts` | 장바구니 CRUD, 카운트 조회 |
-| 주문 | `src/app/actions/order.ts` | 주문 생성/조회/취소 |
-| 상품 | `src/app/actions/product.ts` | 상품 상세/유사상품/옵션 조회 |
-| 리뷰 | `src/app/actions/review.ts` | 단계형 리뷰 작성/조회/요약 |
-| 사용자 | `src/app/actions/user.ts` | 내 정보/프로필 이미지 처리 |
-| 체형정보 | `src/app/actions/body-info.ts` | 체형정보/사이즈 옵션 처리 |
-| 찜 | `src/app/actions/wishlist.ts` | 위시리스트 조회/추가/삭제 |
-| 푸시 | `src/app/actions/push.ts` | 구독 저장/삭제/알림 발송 |
+```text
+src
+├─ app/                         # App Router 엔트리
+│  ├─ layout.tsx                # 전역 레이아웃 (SW 등록, CartDataFetcher)
+│  ├─ page.tsx                  # 홈
+│  ├─ @modal/                   # 인터셉팅 모달 라우트
+│  ├─ actions/                  # 서버 액션 도메인 레이어
+│  ├─ api/                      # Route Handlers
+│  ├─ address/                  # 배송지 페이지군
+│  ├─ auth/                     # OAuth 콜백 페이지
+│  ├─ body-info/                # 체형 정보
+│  ├─ cart/                     # 장바구니
+│  ├─ category/                 # 카테고리
+│  ├─ login/                    # 로그인
+│  ├─ me/                       # 마이페이지
+│  ├─ orders/                   # 주문 목록/상세/취소
+│  ├─ payment/                  # 결제/완료
+│  ├─ product/                  # 상품 상세
+│  ├─ review/                   # 리뷰 작성
+│  ├─ reviews/                  # 리뷰 관리/상세
+│  └─ search/                   # 검색
+|
+├─ components/                  # 도메인 컴포넌트
+│  ├─ ui/                       # 공통 UI primitive
+│  ├─ product/
+│  ├─ category/
+│  ├─ cart/
+│  ├─ reviews/
+│  ├─ search-bar/
+│  ├─ pwa/
+│  └─ ...
+├─ lib/                         # API 클라이언트/유틸/i18n/SSE
+├─ store/                       # Zustand store (cart, notifications)
+├─ schemas/                     # Zod schema
+├─ types/                       # 공통/도메인 타입
+├─ locales/                     # ko/en 번역 리소스
+├─ hooks/                       # 커스텀 훅
+├─ config/                      # 화면/탭 설정값
+└─ mocks/                       # 목 데이터
+```
 
-### `src/components` 도메인 분리 규칙
+## 라우트 맵
 
-- 도메인 단위 폴더(`address`, `cart`, `product`, `reviews` 등) 우선
+### 주요 페이지 라우트
+
+| 경로                         | 파일                                         | 설명                    |
+| ---------------------------- | -------------------------------------------- | ----------------------- |
+| `/`                          | `src/app/page.tsx`                           | 홈 (배너/추천/브랜드)   |
+| `/login`                     | `src/app/login/page.tsx`                     | 로그인                  |
+| `/auth/callback/[provider]`  | `src/app/auth/callback/[provider]/page.tsx`  | OAuth 콜백 처리         |
+| `/search`                    | `src/app/search/page.tsx`                    | 검색 결과               |
+| `/category`                  | `src/app/category/page.tsx`                  | 카테고리 홈             |
+| `/category/[parentId]`       | `src/app/category/[parentId]/page.tsx`       | 부모 카테고리           |
+| `/category/[parentId]/[id]`  | `src/app/category/[parentId]/[id]/page.tsx`  | 서브 카테고리 상품 목록 |
+| `/product/[id]`              | `src/app/product/[id]/page.tsx`              | 상품 상세               |
+| `/cart`                      | `src/app/cart/page.tsx`                      | 장바구니                |
+| `/payment`                   | `src/app/payment/page.tsx`                   | 결제                    |
+| `/payment/complete`          | `src/app/payment/complete/page.tsx`          | 결제 완료               |
+| `/orders`                    | `src/app/orders/page.tsx`                    | 주문 목록               |
+| `/orders/[orderId]`          | `src/app/orders/[orderId]/page.tsx`          | 주문 상세               |
+| `/orders/[orderId]/cancel`   | `src/app/orders/[orderId]/cancel/page.tsx`   | 주문 취소               |
+| `/reviews`                   | `src/app/reviews/page.tsx`                   | 리뷰 관리               |
+| `/reviews/detail/[reviewId]` | `src/app/reviews/detail/[reviewId]/page.tsx` | 리뷰 상세               |
+| `/review/write/[reviewId]`   | `src/app/review/write/[reviewId]/page.tsx`   | 리뷰 작성               |
+| `/me`                        | `src/app/me/page.tsx`                        | 마이페이지              |
+| `/me/edit`                   | `src/app/me/edit/page.tsx`                   | 회원정보 편집           |
+| `/me/edit/body-info`         | `src/app/me/edit/body-info/page.tsx`         | 체형정보 편집           |
+| `/me/wishlist`               | `src/app/me/wishlist/page.tsx`               | 찜 목록                 |
+| `/address`                   | `src/app/address/page.tsx`                   | 배송지 목록             |
+| `/address/new`               | `src/app/address/new/page.tsx`               | 배송지 등록             |
+| `/address/[addressId]`       | `src/app/address/[addressId]/page.tsx`       | 배송지 수정             |
+
+### 접근 보호 경로
+
+`auth.config.ts` / `proxy.ts` 기준 보호 대상:
+
+- `/` : 메인 홈 화면
+- `/me` 및 하위 경로
+- `/reviews` 및 하위 경로
+
+## API Route Handlers
+
+| 경로                              | Method    | 파일                                              | 역할                      |
+| --------------------------------- | --------- | ------------------------------------------------- | ------------------------- |
+| `/api/auth/[...nextauth]`         | GET, POST | `src/app/api/auth/[...nextauth]/route.ts`         | NextAuth 핸들러           |
+| `/api/search/autocomplete`        | GET       | `src/app/api/search/autocomplete/route.ts`        | 자동완성 프록시           |
+| `/api/search/recommend`           | GET       | `src/app/api/search/recommend/route.ts`           | 추천 검색어 프록시        |
+| `/api/notifications/subscribe`    | GET       | `src/app/api/notifications/subscribe/route.ts`    | 알림 SSE 프록시           |
+| `/api/reviews/images`             | POST      | `src/app/api/reviews/images/route.ts`             | 리뷰 이미지 업로드 프록시 |
+| `/api/reviews/[reviewId]/details` | GET       | `src/app/api/reviews/[reviewId]/details/route.ts` | 리뷰 상세 조회 프록시     |
+
+## 서버 액션 구조
+
+`src/app/actions`는 도메인별 백엔드 연동 레이어입니다.
+
+| 파일                              | 주요 함수 예시                                                                               |
+| --------------------------------- | -------------------------------------------------------------------------------------------- |
+| `address.ts`                      | `getAddresses`, `registerAddress`, `updateAddress`, `deleteAddress`                          |
+| `cart.ts`                         | `getCartItems`, `addToCart`, `updateCartItem`, `getCartCount`                                |
+| `order.ts`                        | `createOrderFromCart`, `createOrderFromProduct`, `getOrderDetail`, `cancelOrder`             |
+| `product.ts`                      | `getProductDetail`, `getSimilarProducts`, `getProductOptions`                                |
+| `review.ts`                       | `initPendingReviewAction`, `patchReviewStep*`, `submitReviewAction`, `getReviewDetailAction` |
+| `wishlist.ts`                     | `addToWishlist`, `deleteFromWishlist`, `getMyWishlist`                                       |
+| `user.ts`                         | `getUserInfo`, `updateProfileImageAction`, `deleteProfileImageAction`                        |
+| `body-info.ts`                    | `getMyBodyInfoAction`, `updateBodyInfoAction`, `getSizeOptionsAction`                        |
+| `notification.ts`                 | `getUnreadNotifications`, `readNotification`, `readAllNotifications`                         |
+| `push.ts`, `push-subscription.ts` | 푸시 구독 저장/삭제/발송                                                                     |
+| `category.ts`                     | `getCategories`, `getSubCategories`                                                          |
+| `price-alert.ts`                  | `getPriceAlert`, `savePriceAlert`                                                            |
+
+## 아키텍처 개요
+
+```text
+UI Component
+  -> App Route (page/layout)
+  -> Server Action (src/app/actions)
+  -> API Client (src/lib/api-client.ts / public-api-client.ts)
+  -> Backend API (BACKEND_API_URL)
+```
+
+### API 클라이언트 역할 분리
+
+- `src/lib/api-client.ts`
+  - 서버 세션(`auth()`)에서 `accessToken` 읽어 Authorization 헤더 자동 주입
+  - 인증이 필요한 요청에 사용
+- `src/lib/public-api-client.ts`
+  - 비인증/공개 데이터 요청용
+  - 기본 `revalidate: 60s` 캐시 정책
+
+## 인증 흐름
+
+### 소셜 로그인
+
+1. `/login`에서 카카오/구글 OAuth URL로 리다이렉트
+2. `/auth/callback/[provider]`에서 code 수신
+3. `next-auth`의 `external-oauth` provider로 `signIn` 수행
+4. `auth.ts`에서 백엔드 `/auth/oauth/{provider}` 연동
+5. JWT 세션에 `accessToken`, `refreshToken`, `userId` 등 저장
+
+### 토큰 갱신
+
+- `auth.ts`의 JWT callback에서 만료 임박 시 refresh 시도
+- refresh 실패 시 세션 무효화(재로그인 유도)
+
+## 검색/알림/PWA 동작
+
+### 검색
+
+- 자동완성: `/api/search/autocomplete`
+- 추천검색어: `/api/search/recommend`
+- `use-smart-search`에서 디바운스(120ms), 중복 제거, AbortController로 중복 요청 취소
+- 최근 검색어는 `localStorage`(`onsinsa:recent-searches`)에 저장
+
+### 실시간 알림(SSE)
+
+- 클라이언트: `src/lib/notification-sse-client.ts`의 `EventSource('/api/notifications/subscribe')`
+- 서버: `/api/notifications/subscribe`가 백엔드 SSE 스트림을 프록시
+- 상태 저장: `src/store/notifications.ts` (최대 20개, 읽음 상태 관리)
+
+### PWA / Push
+
+- Manifest: `src/app/manifest.ts`
+- SW 등록: `src/components/sw-register.tsx` -> `/sw.js`
+- SW 처리: `public/sw.js`에서 `push`, `notificationclick` 이벤트 처리
+- 설치 프롬프트 UI: `src/components/pwa/install-prompt.tsx`
+
+## 개발 규칙
+
+프로젝트 규칙(`AGENT.md`) 요약:
+
+- 도메인 중심 폴더 구조 우선 (`src/components/<domain>`)
 - 공통 UI는 `src/components/ui`에만 배치
-- 데이터 결합 컴포넌트는 `*-container.tsx` 패턴 우선
+- 라우트 내부 전용 컴포넌트는 `src/app/**/_components`
+- App Router 규칙(`page.tsx`, `layout.tsx`, `[id]`) 유지
+- 경로 alias: `@/* -> src/*`
 
-<a id="route-map"></a>
-## 라우트 맵 (요약)
+## 트러블슈팅
 
-| 경로 | 설명 |
-| --- | --- |
-| `/` | 홈 (배너/추천 카테고리/추천 상품/브랜드) |
-| `/category/[parentId]/[id]` | 카테고리별 상품 목록 |
-| `/product/[id]` | 상품 상세 |
-| `/search` | 검색 결과 |
-| `/cart` | 장바구니 |
-| `/payment` | 결제 |
-| `/payment/complete` | 결제 완료 |
-| `/orders` | 주문 목록 |
-| `/orders/[orderId]` | 주문 상세 |
-| `/orders/[orderId]/cancel` | 주문 취소 |
-| `/me` | 마이페이지 |
-| `/me/edit` | 회원정보 수정 |
-| `/me/wishlist` | 찜 목록 |
-| `/reviews` | 리뷰 목록 |
-| `/reviews/detail/[reviewId]` | 리뷰 상세 |
-| `/review/write/[reviewId]` | 리뷰 작성 |
+### 1) 로그인 실패
 
-<a id="architecture"></a>
-## 데이터 흐름/아키텍처 개요
+- `.env.local`의 OAuth Client ID 및 `AUTH_SECRET` 확인
+- OAuth provider에 등록한 redirect URI가 아래와 일치하는지 확인  
+  `http://localhost:3000/auth/callback/kakao`  
+  `http://localhost:3000/auth/callback/google`
 
-```text
-UI Components (src/components/*)
-        ↓
-Route/Page (src/app/**/page.tsx)
-        ↓
-Server Actions (src/app/actions/*.ts)
-        ↓
-API Client (src/lib/api-client.ts)
-        ↓
-Backend API (BACKEND_API_URL)
-```
+### 2) 백엔드 호출 실패
 
-인증/세션 흐름 요약:
+- `BACKEND_API_URL` 확인
+- 백엔드 서버 가동 상태 확인
+- 인증 API는 세션 토큰 갱신 실패 시 401/403 가능
 
-- 인증 진입점: `src/app/api/auth/[...nextauth]/route.ts`, `auth.ts`, `auth.config.ts`
-- 세션 전략: JWT
-- `jwt` 콜백에서 액세스 토큰 만료 시 리프레시 토큰으로 재발급 시도
-- 세션 객체에 `accessToken`, `refreshToken`, 사용자 식별 정보를 주입해 서버 액션에서 사용
+### 3) 푸시 알림 동작 불가
 
-<a id="collaboration-guide"></a>
-## 협업 가이드
+- `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` 설정 확인
+- 브라우저 Notification/Service Worker 지원 여부 확인
+- 개발 중에는 브라우저 권한이 차단되어 있지 않은지 확인
 
-### 이슈/PR 템플릿
+### 4) SSE 알림 미수신
 
-- PR 템플릿: `.github/PULL_REQUEST_TEMPLATE.md`
-- 이슈 템플릿: `.github/ISSUE_TEMPLATE/feature_request.md`
+- 로그인 세션 유지 여부 확인
+- `/api/notifications/subscribe` 요청이 200인지 확인
+- 권한 이슈 시 `auth-error` 이벤트로 연결 종료될 수 있음
 
-### PR 체크리스트 요약
+## 현재 상태/제약
 
-- 빌드 테스트 완료 여부 확인
-- 코드 컨벤션 준수 여부 확인
-- 불필요한 `console.log` 제거 여부 확인
-- 주요 플로우 회귀 점검(장바구니/주문/리뷰/마이페이지)
-
-### 커밋 컨벤션
-
-워크플로 가이드 기준 권장 형식:
-
-```text
-type: 한국어 설명
-```
-
-허용 타입:
-
-- `feat`
-- `fix`
-- `refactor`
-- `docs`
-- `style`
-- `test`
-- `chore`
-
-<a id="troubleshooting"></a>
-## 문제 해결 (Troubleshooting)
-
-### 1) 환경 변수 누락
-
-증상:
-
-- 로그인 실패 또는 인증 설정 오류 메시지
-- 서버 액션에서 백엔드 호출 실패
-- 푸시 구독/발송 실패
-
-점검:
-
-- `.env.local` 존재 여부
-- `BACKEND_API_URL`, `AUTH_SECRET`, OAuth/VAPID 키 설정 여부
-- 개발 서버 재시작 여부
-
-### 2) 소셜 로그인 콜백 오류
-
-점검:
-
-- OAuth 공급자에 등록된 Redirect URI와 실제 콜백 경로 일치 여부
-- 카카오/구글 클라이언트 ID 설정 여부
-- 백엔드 인증 엔드포인트 응답 상태 확인
-
-### 3) 푸시 알림 동작 안 함
-
-점검:
-
-- 브라우저의 Service Worker/Notification 지원 여부
-- `NEXT_PUBLIC_VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` 설정 여부
-- HTTPS 또는 로컬 환경 조건 확인
-
-<a id="license"></a>
-## 라이선스/비고
-
-- 라이선스: `미정` (현재 저장소 내 별도 LICENSE 파일 없음)
-- 배포 플랫폼/운영 인프라 정보는 문서화되지 않아 본 README에서 단정하지 않습니다.
+- 테스트 스크립트(`pnpm test`)는 현재 정의되어 있지 않습니다.
+- `docs/` 디렉터리는 현재 비어 있습니다.
+- 라이선스 파일(`LICENSE`)은 저장소에 별도로 없습니다.
+- 알림 기능 제약으로 인해 default 브랜치에는 반영하지 않았습니다.
